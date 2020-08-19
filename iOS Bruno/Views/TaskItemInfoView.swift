@@ -1,0 +1,78 @@
+import SwiftUI
+import UserNotifications
+
+struct TaskItemInfoView: View {
+    @EnvironmentObject var data: DataStore
+    @Binding var task: TaskModel
+    @State var selectedDate = Date()...
+
+    func setTaskDateReminder() {
+        self.task.dateReminderSet = true
+    }
+    
+    func clearTaskDateReminder() {
+        self.task.dateReminderSet = false
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [self.task.id])
+    }
+    
+    func attemptSetTaskDateReminder(taskId: String, taskName: String, taskReminderDate: Date) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+            if success {
+                let content = UNMutableNotificationContent()
+                content.title = "Woof-woof"
+                content.body = taskName
+                content.sound = UNNotificationSound.default
+                
+                let calendar = Calendar.current
+                let components = calendar.dateComponents([Calendar.Component.day, Calendar.Component.month, Calendar.Component.year, Calendar.Component.hour, Calendar.Component.minute], from: taskReminderDate)
+                
+                // show this notification five seconds from now
+                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+
+                // choose a random identifier
+                let request = UNNotificationRequest(identifier: taskId, content: content, trigger: trigger)
+
+                // add our notification request
+                UNUserNotificationCenter.current().add(request)
+                
+                DispatchQueue.main.async {
+                    self.setTaskDateReminder()
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.clearTaskDateReminder()
+                }
+            }
+        }
+    }
+    
+    var body: some View {
+        NavigationView {
+            Group {
+                Form {
+                    if !task.completed {
+                        Section(header: Text("Reminder")) {
+                            if self.task.dateReminderSet {
+                                DatePicker("Reminder is set for", selection: $task.dateReminder)
+                                Button(action: { self.clearTaskDateReminder() }, label: { Text("Clear reminder")})
+                            } else {
+                                DatePicker("Schedule a reminder", selection: $task.dateReminder)
+                                Button(action: { self.attemptSetTaskDateReminder(taskId: self.task.id, taskName: self.task.name, taskReminderDate: self.task.dateReminder) }, label: { Text("Set reminder")})
+                            }
+                        }
+                    }
+                    Section(header: Text("Notes")) {
+                        TextField("Your notes go here", text: self.$task.notes)
+                        .lineLimit(nil)
+                    }
+                }
+            }
+            .navigationBarTitle("Edit Task", displayMode: .inline)
+            .onAppear {
+                if self.task.dateReminder < Date() && self.task.dateReminderSet {
+                    self.clearTaskDateReminder()
+                }
+            }
+        }
+    }
+}
