@@ -27,14 +27,9 @@ struct TaskItemInfoView: View {
                 
                 let calendar = Calendar.current
                 let components = calendar.dateComponents([Calendar.Component.day, Calendar.Component.month, Calendar.Component.year, Calendar.Component.hour, Calendar.Component.minute], from: taskReminderDate)
-                
-                // show this notification five seconds from now
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-
-                // choose a random identifier
                 let request = UNNotificationRequest(identifier: taskId, content: content, trigger: trigger)
 
-                // add our notification request
                 UNUserNotificationCenter.current().add(request)
                 
                 DispatchQueue.main.async {
@@ -52,8 +47,11 @@ struct TaskItemInfoView: View {
         NavigationView {
             ZStack(alignment: .top) {
                 Form {
-                    if !task.completed {
-                        Section(header: Text("Reminder")) {
+                    Section(header: Text("Reminder")) {
+                        if task.completed {
+                            Text("You can't set a reminder for a completed task.")
+                            .font(.footnote)
+                        } else {
                             if self.task.dateReminderSet {
                                 DatePicker("Reminder is set for", selection: $task.dateReminder)
                                 Button(action: { self.clearTaskDateReminder() }, label: { Text("Clear reminder")})
@@ -63,13 +61,22 @@ struct TaskItemInfoView: View {
                             }
                         }
                     }
-                    
+                
                     Section(header: Text("Subtasks")) {
-                        SubTasksView(parentId: self.task.id).environmentObject(DataStore())
+                        SubTasksView(parentId: self.task.id, parentCompleted: task.completed).environmentObject(DataStore())
                     }
                     
                     Section(header: Text("Notes")) {
-                        TextField("Your notes go here", text: $task.notes)
+                        if task.completed {
+                            if task.notes != "" {
+                                Text(task.notes)
+                            } else {
+                                Text("You haven't added notes to this task and you can't add any for a completed task.")
+                                .font(.footnote)
+                            }
+                        } else {
+                            TextField("Your notes go here", text: $task.notes)
+                        }
                     }
                 }
                 

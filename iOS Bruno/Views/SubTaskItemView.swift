@@ -4,12 +4,15 @@ struct SubTaskItemView: View {
     
     @EnvironmentObject var data: DataStore
     @Binding var task: SubTaskModel
+    var parentCompleted: Bool
     
     func completeTask() {
-        if task.completed {
-            task.completed = false
-        } else {
-            task.completed = true
+        if !parentCompleted {
+            if task.completed {
+                task.completed = false
+            } else {
+                task.completed = true
+            }
         }
     }
     
@@ -34,7 +37,14 @@ struct SubTaskItemView: View {
                         }
                 }
                 
-                TextField("Task name", text: $task.name)
+                if task.completed {
+                    Text(task.name)
+                    .strikethrough()
+                } else {
+                    if !parentCompleted {
+                        TextField("Task name", text: $task.name)
+                    }
+                }
 
             }
         }
@@ -43,6 +53,6 @@ struct SubTaskItemView: View {
 
 struct SubTaskItemView_Previews: PreviewProvider {
     static var previews: some View {
-        SubTaskItemView(task: .constant(SubTaskModel())).environmentObject(DataStore())
+        SubTaskItemView(task: .constant(SubTaskModel()), parentCompleted: false).environmentObject(DataStore())
     }
 }

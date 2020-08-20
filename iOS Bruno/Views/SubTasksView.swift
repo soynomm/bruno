@@ -3,6 +3,7 @@ import SwiftUI
 struct SubTasksView: View {
     @EnvironmentObject var data: DataStore
     var parentId: String
+    var parentCompleted: Bool
 
     func getSubTaskListItems() -> [SubTaskModel] {
         let taskList = data.subTasks.sorted(by: { $0.dateCreated < $1.dateCreated }).filter {
@@ -27,18 +28,30 @@ struct SubTasksView: View {
     
     var body: some View {
         List {
-            ForEach(getSubTaskListItems()) { task in
-                SubTaskItemView(task: task.realmBinding())
+            if getSubTaskListItems().count > 0 {
+                ForEach(getSubTaskListItems()) { task in
+                    SubTaskItemView(task: task.realmBinding(), parentCompleted: self.parentCompleted)
+                }
+                .onDelete(perform: self.delete)
+            } else {
+                if parentCompleted {
+                    Text("You haven't created any subtasks and you can't create any for a completed task.")
+                    .font(.footnote)
+                } else {
+                    Text("You haven't created any subtasks.")
+                    .font(.footnote)
+                }
             }
-            .onDelete(perform: self.delete)
             
-            Button(action: self.addSubTask, label: { Text("Add task").foregroundColor(Color.blue) })
+            if !parentCompleted {
+                Button(action: self.addSubTask, label: { Text("Add task").foregroundColor(Color.blue) })
+            }
         }
     }
 }
 
 struct SubTasksView_Previews: PreviewProvider {
     static var previews: some View {
-        SubTasksView(parentId: "").environmentObject(DataStore())
+        SubTasksView(parentId: "", parentCompleted: false).environmentObject(DataStore())
     }
 }

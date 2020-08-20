@@ -45,7 +45,14 @@ struct TaskItemView: View {
                         }
                 }
                 
-                TextField("Task name", text: $task.name)
+                if task.completed {
+                    Text(task.name)
+                    .strikethrough()
+                } else {
+                    TextField("Task name", text: $task.name)
+                }
+                
+                Spacer()
 
                 if task.dateReminderSet && !task.completed {
                     if task.dateReminder < Date() {
