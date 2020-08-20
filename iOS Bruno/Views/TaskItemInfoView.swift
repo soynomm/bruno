@@ -3,8 +3,10 @@ import UserNotifications
 
 struct TaskItemInfoView: View {
     @EnvironmentObject var data: DataStore
+    @Environment(\.colorScheme) var colorScheme
     @Binding var task: TaskModel
     @State var selectedDate = Date()...
+    @State var selectedTab: String = "info"
 
     func setTaskDateReminder() {
         self.task.dateReminderSet = true
@@ -48,7 +50,7 @@ struct TaskItemInfoView: View {
     
     var body: some View {
         NavigationView {
-            Group {
+            ZStack(alignment: .top) {
                 Form {
                     if !task.completed {
                         Section(header: Text("Reminder")) {
@@ -61,16 +63,35 @@ struct TaskItemInfoView: View {
                             }
                         }
                     }
+                    
+                    Section(header: Text("Subtasks")) {
+                        SubTasksView(parentId: self.task.id).environmentObject(DataStore())
+                    }
+                    
                     Section(header: Text("Notes")) {
-                        TextField("Your notes go here", text: self.$task.notes)
-                        .lineLimit(nil)
+                        TextField("Your notes go here", text: $task.notes)
                     }
                 }
+                
             }
             .navigationBarTitle("Edit Task", displayMode: .inline)
             .onAppear {
+                UITableView.appearance().backgroundColor = .clear
                 if self.task.dateReminder < Date() && self.task.dateReminderSet {
                     self.clearTaskDateReminder()
+                }
+                
+                if self.task.dateReminder < Date() && !self.task.dateReminderSet {
+                    self.task.dateReminder = Date()
+                }
+            }
+            .onDisappear {
+                if self.task.dateReminder < Date() && self.task.dateReminderSet {
+                    self.clearTaskDateReminder()
+                }
+                
+                if self.task.dateReminder < Date() && !self.task.dateReminderSet {
+                    self.task.dateReminder = Date()
                 }
             }
         }

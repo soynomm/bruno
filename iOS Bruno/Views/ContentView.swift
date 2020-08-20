@@ -12,10 +12,10 @@ struct ContentWelcomeView: View {
 			Image("Logo")
 			.resizable()
 			.aspectRatio(contentMode: .fit)
-			.frame(width: 125, height: 125)
+			.frame(width: 100, height: 100)
 			
 			Text("Hi! I'm Bruno, your best friend when it comes to getting things done.")
-			.padding(40)
+			.padding(20)
 			.multilineTextAlignment(.center)
 			
 			Button(action: {
@@ -23,6 +23,7 @@ struct ContentWelcomeView: View {
 			}, label: {
 				Text("Let's do it!")
 			})
+			.padding(.top, 20)
 			
 		}
 		.padding(20)
