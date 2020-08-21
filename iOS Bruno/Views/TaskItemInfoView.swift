@@ -70,6 +70,9 @@ struct TaskItemInfoView: View {
                         if task.completed {
                             if task.notes != "" {
                                 Text(task.notes)
+                                .onTapGesture {
+                                    UIPasteboard.general.string = self.task.notes
+                                }
                             } else {
                                 Text("You haven't added notes to this task and you can't add any for a completed task.")
                                 .font(.footnote)
