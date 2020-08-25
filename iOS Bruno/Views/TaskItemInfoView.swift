@@ -2,11 +2,8 @@ import SwiftUI
 import UserNotifications
 
 struct TaskItemInfoView: View {
-    @EnvironmentObject var data: DataStore
-    @Environment(\.colorScheme) var colorScheme
-    @Binding var task: TaskModel
-    @State var selectedDate = Date()...
-    @State var selectedTab: String = "info"
+    @ObservedObject var task: TaskObservable
+    var subTasks: [SubTask]
 
     func setTaskDateReminder() {
         self.task.dateReminderSet = true
@@ -45,48 +42,41 @@ struct TaskItemInfoView: View {
     
     var body: some View {
         NavigationView {
-            ZStack(alignment: .top) {
-                Form {
-                    Section(header: Text("Reminder")) {
-                        if task.completed {
-                            Text("You can't set a reminder for a completed task.")
-                            .font(.footnote)
+            Form {
+                Section(header: Text("Reminder").padding(.top, 15)) {
+                    if task.completed {
+                        Text("You can't set a reminder for a completed task.")
+                        .font(.footnote)
+                    } else {
+                        if self.task.dateReminderSet {
+                            DatePicker("Scheduled for", selection: $task.dateReminder)
+                                .datePickerStyle(CompactDatePickerStyle())
+                            Button(action: { self.clearTaskDateReminder() }, label: { Text("Clear reminder")})
                         } else {
-                            if self.task.dateReminderSet {
-                                DatePicker("Reminder is set for", selection: $task.dateReminder)
-                                Button(action: { self.clearTaskDateReminder() }, label: { Text("Clear reminder")})
-                            } else {
-                                DatePicker("Schedule a reminder", selection: $task.dateReminder)
-                                Button(action: { self.attemptSetTaskDateReminder(taskId: self.task.id, taskName: self.task.name, taskReminderDate: self.task.dateReminder) }, label: { Text("Set reminder")})
-                            }
-                        }
-                    }
-                
-                    Section(header: Text("Subtasks")) {
-                        SubTasksView(parentId: self.task.id, parentCompleted: task.completed).environmentObject(DataStore())
-                    }
-                    
-                    Section(header: Text("Notes")) {
-                        if task.completed {
-                            if task.notes != "" {
-                                Text(task.notes)
-                                .onTapGesture {
-                                    UIPasteboard.general.string = self.task.notes
-                                }
-                            } else {
-                                Text("You haven't added notes to this task and you can't add any for a completed task.")
-                                .font(.footnote)
-                            }
-                        } else {
-                            TextField("Your notes go here", text: $task.notes)
+                            DatePicker("Schedule for", selection: $task.dateReminder)
+                                .datePickerStyle(CompactDatePickerStyle())
+                            Button(action: { self.attemptSetTaskDateReminder(taskId: self.task.id, taskName: self.task.name, taskReminderDate: self.task.dateReminder) }, label: { Text("Set reminder")})
                         }
                     }
                 }
+            
+                Section(header: Text("Subtasks")) {
+                    SubTasksView(parentId: self.task.id, subTasks: self.subTasks)
+                }
                 
+                Section(header: Text("Notes")) {
+                    ZStack {
+                        TextEditor(text: $task.notes)
+                        Text(task.notes)
+                            .padding(.bottom, 10)
+                            .opacity(0)
+                    }
+                    .offset(x: -5)
+                }
             }
-            .navigationBarTitle("Edit Task", displayMode: .inline)
+            .navigationBarTitle(self.task.name, displayMode: .inline)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onAppear {
-                UITableView.appearance().backgroundColor = .clear
                 if self.task.dateReminder < Date() && self.task.dateReminderSet {
                     self.clearTaskDateReminder()
                 }

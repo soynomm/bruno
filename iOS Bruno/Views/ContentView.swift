@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct ContentWelcomeView: View {
-	@EnvironmentObject var data: DataStore
+	var onlyLogo: Bool = false
 	
 	func disableWelcomeScreen() -> Void {
-		data.userDB.update(UserConfigurationModel(id: "welcomeScreen", value: "no"))
+		Kettle().updateConfiguration(Configuration(key: "welcomeScreen", value: "no"))
 	}
 	
 	var body: some View {
@@ -14,16 +14,18 @@ struct ContentWelcomeView: View {
 			.aspectRatio(contentMode: .fit)
 			.frame(width: 100, height: 100)
 			
-			Text("Hi! I'm Bruno, your best friend when it comes to getting things done.")
-			.padding(20)
-			.multilineTextAlignment(.center)
-			
-			Button(action: {
-				self.disableWelcomeScreen()
-			}, label: {
-				Text("Let's do it!")
-			})
-			.padding(.top, 20)
+			if !onlyLogo {
+				Text("Hi! I'm Bruno, your best friend when it comes to getting things done.")
+				.padding(20)
+				.multilineTextAlignment(.center)
+				
+				Button(action: {
+					self.disableWelcomeScreen()
+				}, label: {
+					Text("Let's do it!")
+				})
+				.padding(.top, 20)
+			}
 			
 		}
 		.padding(20)
@@ -31,19 +33,19 @@ struct ContentWelcomeView: View {
 }
 
 struct ContentRegularView: View {
-	@EnvironmentObject var data: DataStore
+	@ObservedObject var observer: KettleObserver
 	@State var currentListId: String = ""
     @State var showLists: Bool = false
 	
 	func addItem(){
-        data.taskDB.create(TaskModel(listId: self.currentListId))
+		Kettle().addTask(Task(listId: self.currentListId))
     }
     
     func getListName(currentListId: String) -> String {
         if currentListId == "" {
             return "Inbox"
         } else {
-            return data.lists.filter {
+			return observer.db.lists.filter {
                 $0.id == currentListId
             }[0].name
         }
@@ -68,49 +70,31 @@ struct ContentRegularView: View {
 	
 	var body: some View {
 		NavigationView {
-			TasksView(listId: currentListId)
+			TasksView(observer: observer, hideCompletedTasks: ConfigurationObservable(configuration: observer.db.configuration.filter({ $0.key == "hideCompletedTasks" })[0]), listId: currentListId)
                 
             .navigationBarTitle(getListName(currentListId: self.currentListId))
 			.navigationBarItems(leading: navigationBarLeadingItem(), trailing: navigationBarTrailingItem())
 			.sheet(isPresented: $showLists, content: {
-				ListsView(currentListId: self.$currentListId, showLists: self.$showLists).environmentObject(DataStore())
+				ListsView(observer: self.observer, currentListId: self.$currentListId, showLists: self.$showLists)
 			})
 		}
 	}
 }
 
 struct ContentView: View {
-	@EnvironmentObject var data: DataStore
-	
-	func isWelcomeScreen() -> Bool {
-		let welcomeScreenConfig = data.userDB.get(id: "welcomeScreen")
-		
-		if welcomeScreenConfig != nil && welcomeScreenConfig?.value == "yes" {
-			return true
-		}
-		
-		if welcomeScreenConfig != nil && welcomeScreenConfig?.value == "no" {
-			return false
-		}
-		
-		data.userDB.create(UserConfigurationModel(id: "welcomeScreen", value: "yes"))
-		
-		return true
-	}
-    
+	@ObservedObject var db = DatabaseObservable(database: Kettle().get())
+
     var body: some View {
-		Group {
-			if isWelcomeScreen() {
-				ContentWelcomeView().environmentObject(DataStore())
-			} else {
-				ContentRegularView().environmentObject(DataStore())
-			}
+		if !observer.loaded {
+			ContentWelcomeView(onlyLogo: true)
+		} else {
+			ContentRegularView(observer: observer)
 		}
 	}
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(DataStore())
+        ContentView()
     }
 }

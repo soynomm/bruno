@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct TaskItemView: View {
-    
-    @EnvironmentObject var data: DataStore
-    @Binding var task: TaskModel
+    @ObservedObject var task: TaskObservable
+    var subTasks: [SubTask]
+    @State var taskName: String = ""
     @State var showInfoButton: Bool = false
     @State var showTaskInfo: Bool = false
     
@@ -14,14 +14,6 @@ struct TaskItemView: View {
             task.completed = true
             task.dateReminderSet = false
         }
-    }
-    
-    func displayDateReminder() -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        
-        return formatter.string(from: task.dateReminder)
     }
     
     var body: some View {
@@ -58,14 +50,14 @@ struct TaskItemView: View {
                     if task.dateReminder < Date() {
                         Image(systemName: "bell")
                             .foregroundColor(Color.red)
-                            .padding(.top, 4)
+                            .padding(.top, 2)
                             .onTapGesture {
                                 self.showTaskInfo = true
                         }
                     } else {
                         Image(systemName: "bell")
                             .foregroundColor(Color.blue)
-                            .padding(.top, 4)
+                            .padding(.top, 2)
                             .onTapGesture {
                                 self.showTaskInfo = true
                         }
@@ -73,7 +65,7 @@ struct TaskItemView: View {
                 }
 
                 Image(systemName: "info.circle")
-                    .padding(.top, 4)
+                    .padding(.top, 2)
                     .onTapGesture {
                         self.showTaskInfo = true
                     }
@@ -81,13 +73,10 @@ struct TaskItemView: View {
             }
         }
         .sheet(isPresented: $showTaskInfo, content: {
-            TaskItemInfoView(task: self.$task).environmentObject(DataStore())
+            TaskItemInfoView(task: self.task, subTasks: self.subTasks)
         })
-    }
-}
-
-struct TaskItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        TaskItemView(task: .constant(TaskModel())).environmentObject(DataStore())
+        .onAppear {
+            self.taskName = self.task.name
+        }
     }
 }

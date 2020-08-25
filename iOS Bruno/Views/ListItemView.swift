@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct ListItemView: View {
-    @EnvironmentObject var data: DataStore
-    @Binding var list: TaskListModel
+    @ObservedObject var list: TaskListObservable
     @Binding var currentListId: String
     var editMode: EditMode
     var taskCount: Int
@@ -34,11 +33,5 @@ struct ListItemView: View {
                 .font(.caption)
             }
         }
-    }
-}
-
-struct ListItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        ListItemView(list: .constant(TaskListModel()), currentListId: .constant(""), editMode: .inactive, taskCount: 10, showLists: .constant(true)).environmentObject(DataStore())
     }
 }

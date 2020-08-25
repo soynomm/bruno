@@ -1,12 +1,11 @@
 import SwiftUI
 
 struct SubTasksView: View {
-    @EnvironmentObject var data: DataStore
     var parentId: String
-    var parentCompleted: Bool
+    var subTasks: [SubTask]
 
-    func getSubTaskListItems() -> [SubTaskModel] {
-        let taskList = data.subTasks.sorted(by: { $0.dateCreated < $1.dateCreated }).filter {
+    func getSubTaskListItems() -> [SubTask] {
+        let taskList = self.subTasks.sorted(by: { $0.dateCreated < $1.dateCreated }).filter {
             $0.parentId == self.parentId
         }
         
@@ -14,15 +13,15 @@ struct SubTasksView: View {
     }
     
     func addSubTask(){
-        data.subTaskDB.create(SubTaskModel(parentId: self.parentId))
+        Kettle().addSubTask(SubTask(parentId: self.parentId))
     }
     
     func delete(at offsets: IndexSet) -> Void {
         let indexes = Array(offsets)
         
         for index in indexes {
-            let task = data.subTasks[index]
-            data.subTaskDB.delete(task)
+            let task = self.subTasks[index]
+            Kettle().deleteSubTask(task)
         }
     }
     
@@ -30,28 +29,15 @@ struct SubTasksView: View {
         List {
             if getSubTaskListItems().count > 0 {
                 ForEach(getSubTaskListItems()) { task in
-                    SubTaskItemView(task: task.realmBinding(), parentCompleted: self.parentCompleted)
+                    SubTaskItemView(task: SubTaskObservable(task: task))
                 }
                 .onDelete(perform: self.delete)
             } else {
-                if parentCompleted {
-                    Text("You haven't created any subtasks and you can't create any for a completed task.")
-                    .font(.footnote)
-                } else {
-                    Text("You haven't created any subtasks.")
-                    .font(.footnote)
-                }
+                Text("You haven't created any subtasks.")
+                .font(.footnote)
             }
             
-            if !parentCompleted {
-                Button(action: self.addSubTask, label: { Text("Add task").foregroundColor(Color.blue) })
-            }
+            Button(action: self.addSubTask, label: { Text("Add task").foregroundColor(Color.blue) })
         }
-    }
-}
-
-struct SubTasksView_Previews: PreviewProvider {
-    static var previews: some View {
-        SubTasksView(parentId: "", parentCompleted: false).environmentObject(DataStore())
     }
 }

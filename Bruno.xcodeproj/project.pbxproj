@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,16 +13,11 @@
 		1CFA1BEC24AFA1CD00D4241F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CFA1BEB24AFA1CD00D4241F /* Assets.xcassets */; };
 		1CFA1BEF24AFA1CD00D4241F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CFA1BEE24AFA1CD00D4241F /* Preview Assets.xcassets */; };
 		1CFA1BF224AFA1CD00D4241F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1CFA1BF024AFA1CD00D4241F /* LaunchScreen.storyboard */; };
-		1CFA1C0024AFA8AE00D4241F /* DataObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFA1BF824AFA8AE00D4241F /* DataObservable.swift */; };
-		1CFA1C0124AFA8AE00D4241F /* Models+Maps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFA1BF924AFA8AE00D4241F /* Models+Maps.swift */; };
-		1CFA1C0324AFA8AE00D4241F /* RealmHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFA1BFC24AFA8AE00D4241F /* RealmHelper.swift */; };
-		1CFA1C0624AFA8AE00D4241F /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFA1BFF24AFA8AE00D4241F /* DataStore.swift */; };
 		1CFA1C0B24AFD60C00D4241F /* TasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFA1C0A24AFD60C00D4241F /* TasksView.swift */; };
 		6D5F87F024EC26E2008F66D3 /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6D5F87F124EC2802008F66D3 /* Pods_iOS_Bruno.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B04DD92DB0951A09F1E2FA /* Pods_iOS_Bruno.framework */; };
-		6D5F87F224EC2802008F66D3 /* Pods_iOS_Bruno.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 62B04DD92DB0951A09F1E2FA /* Pods_iOS_Bruno.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6D65B8EB24ED490E005C4C71 /* SubTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D65B8EA24ED490E005C4C71 /* SubTasksView.swift */; };
 		6D65B8ED24ED4A87005C4C71 /* SubTaskItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D65B8EC24ED4A87005C4C71 /* SubTaskItemView.swift */; };
+		6DF4EE3C24F2AD9200F238CA /* Kettle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF4EE3B24F2AD9200F238CA /* Kettle.swift */; };
 		6DF9DAAE24E9CD5C00247C8F /* TaskItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF9DAAD24E9CD5C00247C8F /* TaskItemView.swift */; };
 		6DF9DAB024EB1CC000247C8F /* ListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF9DAAF24EB1CC000247C8F /* ListsView.swift */; };
 		6DF9DAB224EB1D5600247C8F /* ListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF9DAB124EB1D5600247C8F /* ListItemView.swift */; };
@@ -37,7 +32,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				6D5F87F024EC26E2008F66D3 /* (null) in Embed Frameworks */,
-				6D5F87F224EC2802008F66D3 /* Pods_iOS_Bruno.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,20 +47,14 @@
 		1CFA1BEE24AFA1CD00D4241F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1CFA1BF124AFA1CD00D4241F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1CFA1BF324AFA1CD00D4241F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1CFA1BF824AFA8AE00D4241F /* DataObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataObservable.swift; sourceTree = "<group>"; };
-		1CFA1BF924AFA8AE00D4241F /* Models+Maps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Models+Maps.swift"; sourceTree = "<group>"; };
-		1CFA1BFC24AFA8AE00D4241F /* RealmHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmHelper.swift; sourceTree = "<group>"; };
-		1CFA1BFF24AFA8AE00D4241F /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		1CFA1C0A24AFD60C00D4241F /* TasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksView.swift; sourceTree = "<group>"; };
-		62B04DD92DB0951A09F1E2FA /* Pods_iOS_Bruno.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_Bruno.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D65B8EA24ED490E005C4C71 /* SubTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubTasksView.swift; sourceTree = "<group>"; };
 		6D65B8EC24ED4A87005C4C71 /* SubTaskItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubTaskItemView.swift; sourceTree = "<group>"; };
+		6DF4EE3B24F2AD9200F238CA /* Kettle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kettle.swift; sourceTree = "<group>"; };
 		6DF9DAAD24E9CD5C00247C8F /* TaskItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItemView.swift; sourceTree = "<group>"; };
 		6DF9DAAF24EB1CC000247C8F /* ListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsView.swift; sourceTree = "<group>"; };
 		6DF9DAB124EB1D5600247C8F /* ListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemView.swift; sourceTree = "<group>"; };
 		6DF9DAB324EB1E3700247C8F /* TaskItemInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItemInfoView.swift; sourceTree = "<group>"; };
-		B816F005E0719BF397668816 /* Pods-iOS Bruno.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS Bruno.release.xcconfig"; path = "Target Support Files/Pods-iOS Bruno/Pods-iOS Bruno.release.xcconfig"; sourceTree = "<group>"; };
-		C5A76EED99DC976B02AE8683 /* Pods-iOS Bruno.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS Bruno.debug.xcconfig"; path = "Target Support Files/Pods-iOS Bruno/Pods-iOS Bruno.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,7 +62,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D5F87F124EC2802008F66D3 /* Pods_iOS_Bruno.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +73,6 @@
 			children = (
 				1CFA1BE424AFA1CC00D4241F /* iOS Bruno */,
 				1CFA1BE324AFA1CC00D4241F /* Products */,
-				D56D616ADF1E590E6CFC74D3 /* Pods */,
 				6B858D30DF330739FB94DC64 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -104,7 +90,7 @@
 			children = (
 				1CFA1BE524AFA1CC00D4241F /* AppDelegate.swift */,
 				1CFA1BE724AFA1CC00D4241F /* SceneDelegate.swift */,
-				1CFA1BF724AFA38E00D4241F /* Data */,
+				6DF4EE3B24F2AD9200F238CA /* Kettle.swift */,
 				1CFA1C0924AFD5DD00D4241F /* Views */,
 				1CFA1BEB24AFA1CD00D4241F /* Assets.xcassets */,
 				1CFA1BF024AFA1CD00D4241F /* LaunchScreen.storyboard */,
@@ -120,17 +106,6 @@
 				1CFA1BEE24AFA1CD00D4241F /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		1CFA1BF724AFA38E00D4241F /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				1CFA1BFC24AFA8AE00D4241F /* RealmHelper.swift */,
-				1CFA1BF924AFA8AE00D4241F /* Models+Maps.swift */,
-				1CFA1BF824AFA8AE00D4241F /* DataObservable.swift */,
-				1CFA1BFF24AFA8AE00D4241F /* DataStore.swift */,
-			);
-			path = Data;
 			sourceTree = "<group>";
 		};
 		1CFA1C0924AFD5DD00D4241F /* Views */ = {
@@ -151,18 +126,8 @@
 		6B858D30DF330739FB94DC64 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				62B04DD92DB0951A09F1E2FA /* Pods_iOS_Bruno.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		D56D616ADF1E590E6CFC74D3 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				C5A76EED99DC976B02AE8683 /* Pods-iOS Bruno.debug.xcconfig */,
-				B816F005E0719BF397668816 /* Pods-iOS Bruno.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -172,13 +137,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1CFA1BF424AFA1CD00D4241F /* Build configuration list for PBXNativeTarget "iOS Bruno" */;
 			buildPhases = (
-				86F8654E9AC8D4D19B4557C6 /* [CP] Check Pods Manifest.lock */,
 				1CFA1BDE24AFA1CC00D4241F /* Sources */,
 				1CFA1BDF24AFA1CC00D4241F /* Frameworks */,
 				1CFA1BE024AFA1CC00D4241F /* Resources */,
 				6DF9DAA724E7CA6F00247C8F /* ShellScript */,
 				6DF9DAAA24E7CB9900247C8F /* Embed Frameworks */,
-				C68595217B5C6E68F000CF4D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +159,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1200;
 				TargetAttributes = {
 					1CFA1BE124AFA1CC00D4241F = {
 						CreatedOnToolsVersion = 11.5;
@@ -253,45 +216,6 @@
 			shellScript = "
 ";
 		};
-		86F8654E9AC8D4D19B4557C6 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-iOS Bruno-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C68595217B5C6E68F000CF4D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iOS Bruno/Pods-iOS Bruno-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iOS Bruno/Pods-iOS Bruno-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iOS Bruno/Pods-iOS Bruno-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -302,16 +226,13 @@
 				1CFA1BE624AFA1CC00D4241F /* AppDelegate.swift in Sources */,
 				6DF9DAB224EB1D5600247C8F /* ListItemView.swift in Sources */,
 				1CFA1BE824AFA1CC00D4241F /* SceneDelegate.swift in Sources */,
-				1CFA1C0024AFA8AE00D4241F /* DataObservable.swift in Sources */,
 				6DF9DAB024EB1CC000247C8F /* ListsView.swift in Sources */,
 				6DF9DAB424EB1E3700247C8F /* TaskItemInfoView.swift in Sources */,
 				1CFA1C0B24AFD60C00D4241F /* TasksView.swift in Sources */,
 				6D65B8ED24ED4A87005C4C71 /* SubTaskItemView.swift in Sources */,
-				1CFA1C0624AFA8AE00D4241F /* DataStore.swift in Sources */,
 				6D65B8EB24ED490E005C4C71 /* SubTasksView.swift in Sources */,
-				1CFA1C0324AFA8AE00D4241F /* RealmHelper.swift in Sources */,
 				1CFA1BEA24AFA1CC00D4241F /* ContentView.swift in Sources */,
-				1CFA1C0124AFA8AE00D4241F /* Models+Maps.swift in Sources */,
+				6DF4EE3C24F2AD9200F238CA /* Kettle.swift in Sources */,
 				6DF9DAAE24E9CD5C00247C8F /* TaskItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,6 +266,7 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -378,6 +300,7 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -396,7 +319,6 @@
 		};
 		1CFA1BF524AFA1CD00D4241F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C5A76EED99DC976B02AE8683 /* Pods-iOS Bruno.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -455,7 +377,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "iOS Bruno/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -475,7 +397,6 @@
 		};
 		1CFA1BF624AFA1CD00D4241F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B816F005E0719BF397668816 /* Pods-iOS Bruno.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -528,7 +449,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "iOS Bruno/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

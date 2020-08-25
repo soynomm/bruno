@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct TasksView: View {
-    @EnvironmentObject var data: DataStore
+    @ObservedObject var observer: KettleObserver
+    @ObservedObject var hideCompletedTasks: ConfigurationObservable
     var listId: String
-    @State var hideCompletedItems: Bool = false
-    
-    func getTaskListItems(completed: Bool) -> [TaskModel] {
-        let taskList = data.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
+
+    func getTaskListItems(completed: Bool) -> [Task] {
+        let taskList = observer.db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
             $0.listId == self.listId
         }
         
@@ -15,19 +15,34 @@ struct TasksView: View {
         }
     }
     
-    func delete(at offsets: IndexSet) -> Void {
+    func deleteUncompleted(at offsets: IndexSet) -> Void {
         let indexes = Array(offsets)
+        let taskList = observer.db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
+            $0.listId == self.listId && $0.completed == false
+        }
         
         for index in indexes {
-            let task = data.tasks[index]
-            data.taskDB.delete(task)
+            let task = taskList[index]
+            Kettle().deleteTask(task)
+        }
+    }
+    
+    func deleteCompleted(at offsets: IndexSet) -> Void {
+        let indexes = Array(offsets)
+        let taskList = observer.db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
+            $0.listId == self.listId && $0.completed == true
+        }
+        
+        for index in indexes {
+            let task = taskList[index]
+            Kettle().deleteTask(task)
         }
     }
     
     func hasCompletedTasks() -> Bool {
         var hasCompletedTasks = false
         
-        for t in data.tasks {
+        for t in observer.db.tasks {
             if t.listId == self.listId && t.completed == true {
                 hasCompletedTasks = true
             }
@@ -38,10 +53,10 @@ struct TasksView: View {
     
     func unCompletedTasksSection() -> some View {
         return Section {
-            ForEach(getTaskListItems(completed: false)) { task in
-                TaskItemView(task: task.realmBinding())
+            ForEach(getTaskListItems(completed: false), id: \.id) { task in
+                TaskItemView(task: TaskObservable(task: task), subTasks: observer.db.subTasks)
             }
-            .onDelete(perform: self.delete)
+            .onDelete(perform: self.deleteUncompleted)
         }
     }
     
@@ -50,23 +65,23 @@ struct TasksView: View {
             Text("Completed")
             Spacer()
             Button(action: {
-                if self.hideCompletedItems {
-                    self.hideCompletedItems = false
+                if self.hideCompletedTasks.value == "yes" {
+                    self.hideCompletedTasks.value = "no"
                 } else {
-                    self.hideCompletedItems = true
+                    self.hideCompletedTasks.value = "yes"
                 }
             }, label: {
-                if self.hideCompletedItems {
+                if self.hideCompletedTasks.value == "yes" {
                     Text("Show completed tasks")
                 } else {
                     Text("Hide completed tasks")
                 }
             })}) {
-                if !self.hideCompletedItems {
-                    ForEach(getTaskListItems(completed: true)) { task in
-                        TaskItemView(task: task.realmBinding())
+                if self.hideCompletedTasks.value == "no" {
+                    ForEach(getTaskListItems(completed: true), id: \.id) { task in
+                        TaskItemView(task: TaskObservable(task: task), subTasks: observer.db.subTasks)
                     }
-                    .onDelete(perform: self.delete)
+                    .onDelete(perform: self.deleteCompleted)
                 }
             }
     }
@@ -82,11 +97,5 @@ struct TasksView: View {
             .listStyle(GroupedListStyle())
             
         }
-    }
-}
-
-struct TasksView_Previews: PreviewProvider {
-    static var previews: some View {
-        TasksView(listId: "").environmentObject(DataStore())
     }
 }

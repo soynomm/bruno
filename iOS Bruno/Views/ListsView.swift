@@ -1,19 +1,19 @@
 import SwiftUI
 
 struct ListsView: View {
-    @EnvironmentObject var data: DataStore
+    @ObservedObject var observer: KettleObserver
     @Binding var currentListId: String
     @Binding var showLists: Bool
     @State var isEditMode: EditMode = .inactive
     
     func addItem() {
-        data.listDB.create(TaskListModel())
+        Kettle().addList(TaskList())
         self.isEditMode = .active
     }
     
     func getListTaskCount(listId: String) -> Int {
         var count = 0
-        for task in data.tasks {
+        for task in observer.db.tasks {
             if task.listId == listId && task.completed == false {
                 count += 1
             }
@@ -26,12 +26,12 @@ struct ListsView: View {
         let indexes = Array(offsets)
         
         for index in indexes {
-            let list = data.lists[index]
+            let list = observer.db.lists[index]
             
             // delete tasks
-            for task in data.tasks {
+            for task in observer.db.tasks {
                 if task.listId == list.id {
-                    data.taskDB.delete(task)
+                    Kettle().deleteTask(task)
                 }
             }
             
@@ -41,7 +41,7 @@ struct ListsView: View {
             }
             
             // delete list
-            data.listDB.delete(list)
+            Kettle().deleteList(list)
         }
     }
 
@@ -71,8 +71,8 @@ struct ListsView: View {
                         }
                     }
                     
-                    ForEach(data.lists, id: \.id) { list in
-                        ListItemView(list: list.realmBinding(), currentListId: self.$currentListId, editMode: self.isEditMode, taskCount: self.getListTaskCount(listId: list.id), showLists: self.$showLists).environmentObject(DataStore())
+                    ForEach(observer.db.lists, id: \.id) { list in
+                        ListItemView(list: TaskListObservable(list: list), currentListId: self.$currentListId, editMode: self.isEditMode, taskCount: self.getListTaskCount(listId: list.id), showLists: self.$showLists)
                     }
                     .onDelete(perform: self.delete)
                 }
@@ -84,12 +84,5 @@ struct ListsView: View {
             }))
             .environment(\.editMode, self.$isEditMode)
         }
-    }
-}
-
-
-struct ListsView_Previews: PreviewProvider {
-    static var previews: some View {
-        ListsView(currentListId: .constant(""), showLists: .constant(true)).environmentObject(DataStore())
     }
 }
