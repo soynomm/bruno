@@ -1,10 +1,12 @@
 import SwiftUI
 
 struct ContentWelcomeView: View {
+	@ObservedObject var db: DatabaseObservable
 	var onlyLogo: Bool = false
 	
 	func disableWelcomeScreen() -> Void {
-		Kettle().updateConfiguration(Configuration(key: "welcomeScreen", value: "no"))
+		let index = db.configuration.firstIndex { $0.key == "isWelcomeScreen" }
+		db.configuration[index!].value = "no"
 	}
 	
 	var body: some View {
@@ -33,19 +35,19 @@ struct ContentWelcomeView: View {
 }
 
 struct ContentRegularView: View {
-	@ObservedObject var observer: KettleObserver
+	@ObservedObject var db: DatabaseObservable
 	@State var currentListId: String = ""
     @State var showLists: Bool = false
 	
 	func addItem(){
-		Kettle().addTask(Task(listId: self.currentListId))
+		db.tasks.append(Task(listId: self.currentListId))
     }
     
     func getListName(currentListId: String) -> String {
         if currentListId == "" {
             return "Inbox"
         } else {
-			return observer.db.lists.filter {
+			return db.lists.filter {
                 $0.id == currentListId
             }[0].name
         }
@@ -70,12 +72,12 @@ struct ContentRegularView: View {
 	
 	var body: some View {
 		NavigationView {
-			TasksView(observer: observer, hideCompletedTasks: ConfigurationObservable(configuration: observer.db.configuration.filter({ $0.key == "hideCompletedTasks" })[0]), listId: currentListId)
+			TasksView(db: db, hideCompletedTasks: false, listId: currentListId)
                 
             .navigationBarTitle(getListName(currentListId: self.currentListId))
 			.navigationBarItems(leading: navigationBarLeadingItem(), trailing: navigationBarTrailingItem())
 			.sheet(isPresented: $showLists, content: {
-				ListsView(observer: self.observer, currentListId: self.$currentListId, showLists: self.$showLists)
+				ListsView(db: self.db, currentListId: self.$currentListId, showLists: self.$showLists)
 			})
 		}
 	}
@@ -84,11 +86,42 @@ struct ContentRegularView: View {
 struct ContentView: View {
 	@ObservedObject var db = DatabaseObservable(database: Kettle().get())
 
+	func isWelcomeScreen() -> Bool {
+		let configuration = db.configuration.first(where: { $0.key == "isWelcomeScreen" })
+		
+		if configuration != nil && configuration!.value == "yes" {
+			return true
+		}
+		
+		if configuration != nil && configuration!.value == "no" {
+			return false
+		}
+		
+		return true
+	}
+	
     var body: some View {
-		if !observer.loaded {
-			ContentWelcomeView(onlyLogo: true)
-		} else {
-			ContentRegularView(observer: observer)
+		Group {
+			if isWelcomeScreen() {
+				ContentWelcomeView(db: db)
+			} else {
+				ContentRegularView(db: db)
+			}
+		}
+		.onAppear {
+			let isWelcomeScreenConfiguration = db.configuration.first { $0.key == "isWelcomeScreen" }
+			
+			if isWelcomeScreenConfiguration == nil {
+				db.configuration.append(Configuration(key: "isWelcomeScreen", value: "yes"))
+			}
+		}
+		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+			Kettle().write(db)
+			print("willresign")
+		}
+		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
+			Kettle().write(db)
+			print("willterm")
 		}
 	}
 }

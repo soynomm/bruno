@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct TasksView: View {
-    @ObservedObject var observer: KettleObserver
-    @ObservedObject var hideCompletedTasks: ConfigurationObservable
+    @ObservedObject var db: DatabaseObservable
+    @State var hideCompletedTasks: Bool = false
     var listId: String
 
     func getTaskListItems(completed: Bool) -> [Task] {
-        let taskList = observer.db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
+        let taskList = db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
             $0.listId == self.listId
         }
         
@@ -17,32 +17,32 @@ struct TasksView: View {
     
     func deleteUncompleted(at offsets: IndexSet) -> Void {
         let indexes = Array(offsets)
-        let taskList = observer.db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
+        let taskList = db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
             $0.listId == self.listId && $0.completed == false
         }
         
         for index in indexes {
             let task = taskList[index]
-            Kettle().deleteTask(task)
+            db.tasks = db.tasks.filter { $0.id != task.id }
         }
     }
     
     func deleteCompleted(at offsets: IndexSet) -> Void {
         let indexes = Array(offsets)
-        let taskList = observer.db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
+        let taskList = db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
             $0.listId == self.listId && $0.completed == true
         }
         
         for index in indexes {
             let task = taskList[index]
-            Kettle().deleteTask(task)
+            db.tasks = db.tasks.filter { $0.id != task.id }
         }
     }
     
     func hasCompletedTasks() -> Bool {
         var hasCompletedTasks = false
         
-        for t in observer.db.tasks {
+        for t in db.tasks {
             if t.listId == self.listId && t.completed == true {
                 hasCompletedTasks = true
             }
@@ -54,7 +54,7 @@ struct TasksView: View {
     func unCompletedTasksSection() -> some View {
         return Section {
             ForEach(getTaskListItems(completed: false), id: \.id) { task in
-                TaskItemView(task: TaskObservable(task: task), subTasks: observer.db.subTasks)
+                TaskItemView(task: TaskObservable(task: task, db: db), db: db, subTasks: db.subTasks)
             }
             .onDelete(perform: self.deleteUncompleted)
         }
@@ -65,21 +65,21 @@ struct TasksView: View {
             Text("Completed")
             Spacer()
             Button(action: {
-                if self.hideCompletedTasks.value == "yes" {
-                    self.hideCompletedTasks.value = "no"
+                if self.hideCompletedTasks {
+                    self.hideCompletedTasks = false
                 } else {
-                    self.hideCompletedTasks.value = "yes"
+                    self.hideCompletedTasks = true
                 }
             }, label: {
-                if self.hideCompletedTasks.value == "yes" {
+                if self.hideCompletedTasks {
                     Text("Show completed tasks")
                 } else {
                     Text("Hide completed tasks")
                 }
             })}) {
-                if self.hideCompletedTasks.value == "no" {
+                if !self.hideCompletedTasks {
                     ForEach(getTaskListItems(completed: true), id: \.id) { task in
-                        TaskItemView(task: TaskObservable(task: task), subTasks: observer.db.subTasks)
+                        TaskItemView(task: TaskObservable(task: task, db: db), db: db, subTasks: db.subTasks)
                     }
                     .onDelete(perform: self.deleteCompleted)
                 }

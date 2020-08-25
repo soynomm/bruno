@@ -2,8 +2,8 @@ import SwiftUI
 
 struct TaskItemView: View {
     @ObservedObject var task: TaskObservable
+    @ObservedObject var db: DatabaseObservable
     var subTasks: [SubTask]
-    @State var taskName: String = ""
     @State var showInfoButton: Bool = false
     @State var showTaskInfo: Bool = false
     
@@ -73,10 +73,7 @@ struct TaskItemView: View {
             }
         }
         .sheet(isPresented: $showTaskInfo, content: {
-            TaskItemInfoView(task: self.task, subTasks: self.subTasks)
+            TaskItemInfoView(db: self.db, task: self.task, subTasks: self.subTasks)
         })
-        .onAppear {
-            self.taskName = self.task.name
-        }
     }
 }

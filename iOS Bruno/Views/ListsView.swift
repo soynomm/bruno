@@ -1,19 +1,19 @@
 import SwiftUI
 
 struct ListsView: View {
-    @ObservedObject var observer: KettleObserver
+    @ObservedObject var db: DatabaseObservable
     @Binding var currentListId: String
     @Binding var showLists: Bool
     @State var isEditMode: EditMode = .inactive
     
     func addItem() {
-        Kettle().addList(TaskList())
+        db.lists.append(TaskList())
         self.isEditMode = .active
     }
     
     func getListTaskCount(listId: String) -> Int {
         var count = 0
-        for task in observer.db.tasks {
+        for task in db.tasks {
             if task.listId == listId && task.completed == false {
                 count += 1
             }
@@ -26,12 +26,12 @@ struct ListsView: View {
         let indexes = Array(offsets)
         
         for index in indexes {
-            let list = observer.db.lists[index]
+            let list = db.lists[index]
             
             // delete tasks
-            for task in observer.db.tasks {
+            for task in db.tasks {
                 if task.listId == list.id {
-                    Kettle().deleteTask(task)
+                    db.tasks = db.tasks.filter { $0.id != task.id }
                 }
             }
             
@@ -41,7 +41,7 @@ struct ListsView: View {
             }
             
             // delete list
-            Kettle().deleteList(list)
+            db.lists = db.lists.filter { $0.id != list.id }
         }
     }
 
@@ -71,8 +71,8 @@ struct ListsView: View {
                         }
                     }
                     
-                    ForEach(observer.db.lists, id: \.id) { list in
-                        ListItemView(list: TaskListObservable(list: list), currentListId: self.$currentListId, editMode: self.isEditMode, taskCount: self.getListTaskCount(listId: list.id), showLists: self.$showLists)
+                    ForEach(db.lists, id: \.id) { list in
+                        ListItemView(list: TaskListObservable(list: list, db: self.db), currentListId: self.$currentListId, editMode: self.isEditMode, taskCount: self.getListTaskCount(listId: list.id), showLists: self.$showLists)
                     }
                     .onDelete(perform: self.delete)
                 }

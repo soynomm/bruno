@@ -2,6 +2,7 @@ import SwiftUI
 import UserNotifications
 
 struct TaskItemInfoView: View {
+    @ObservedObject var db: DatabaseObservable
     @ObservedObject var task: TaskObservable
     var subTasks: [SubTask]
 
@@ -61,7 +62,7 @@ struct TaskItemInfoView: View {
                 }
             
                 Section(header: Text("Subtasks")) {
-                    SubTasksView(parentId: self.task.id, subTasks: self.subTasks)
+                    SubTasksView(parentId: self.task.id, db: self.db, subTasks: self.subTasks)
                 }
                 
                 Section(header: Text("Notes")) {
@@ -74,7 +75,7 @@ struct TaskItemInfoView: View {
                     .offset(x: -5)
                 }
             }
-            .navigationBarTitle(self.task.name, displayMode: .inline)
+            .navigationBarHidden(true)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onAppear {
                 if self.task.dateReminder < Date() && self.task.dateReminderSet {
