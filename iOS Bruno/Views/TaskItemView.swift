@@ -49,15 +49,19 @@ struct TaskItemView: View {
                 if task.dateReminderSet && !task.completed {
                     if task.dateReminder < Date() {
                         Image(systemName: "bell")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
                             .foregroundColor(Color.red)
-                            .padding(.top, 2)
+                            .frame(width: 19, height: 19)
                             .onTapGesture {
                                 self.showTaskInfo = true
                         }
                     } else {
                         Image(systemName: "bell")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
                             .foregroundColor(Color.blue)
-                            .padding(.top, 2)
+                            .frame(width: 19, height: 19)
                             .onTapGesture {
                                 self.showTaskInfo = true
                         }
@@ -65,7 +69,9 @@ struct TaskItemView: View {
                 }
 
                 Image(systemName: "info.circle")
-                    .padding(.top, 2)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 19, height: 19)
                     .onTapGesture {
                         self.showTaskInfo = true
                     }

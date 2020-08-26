@@ -86,6 +86,22 @@ struct ContentRegularView: View {
 struct ContentView: View {
 	@ObservedObject var db = DatabaseObservable(database: Kettle().get())
 
+	func initialize() {
+		// Set up configuration for welcome screen
+		let isWelcomeScreenConfiguration = db.configuration.first { $0.key == "isWelcomeScreen" }
+		
+		if isWelcomeScreenConfiguration == nil {
+			db.configuration.append(Configuration(key: "isWelcomeScreen", value: "yes"))
+		}
+		
+		// Set up configuration for completed tasks
+		let hideCompletedTasksConfiguration = db.configuration.first { $0.key == "hideCompletedTasks" }
+		
+		if hideCompletedTasksConfiguration == nil {
+			db.configuration.append(Configuration(key: "hideCompletedTasks", value: "no"))
+		}
+	}
+	
 	func isWelcomeScreen() -> Bool {
 		let configuration = db.configuration.first(where: { $0.key == "isWelcomeScreen" })
 		
@@ -109,11 +125,7 @@ struct ContentView: View {
 			}
 		}
 		.onAppear {
-			let isWelcomeScreenConfiguration = db.configuration.first { $0.key == "isWelcomeScreen" }
-			
-			if isWelcomeScreenConfiguration == nil {
-				db.configuration.append(Configuration(key: "isWelcomeScreen", value: "yes"))
-			}
+			initialize()
 		}
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
 			Kettle().write(db)

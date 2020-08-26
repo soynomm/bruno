@@ -1,8 +1,41 @@
 import Foundation
+import SwiftUI
 
 struct KettleConfiguration {
     var throttlerDelay = 0.3
     var noteThrottler = 1.0
+}
+
+class KettleHelper {
+    public func clearNotification(id: String) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
+    }
+    
+    public func setNotification(id: String, date: Date, contents: String, block: @escaping () -> Void) {
+        self.clearNotification(id: id)
+        
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+            if success {
+                let content = UNMutableNotificationContent()
+                content.title = "Woof-woof"
+                content.body = contents
+                content.sound = UNNotificationSound.default
+                
+                let calendar = Calendar.current
+                let components = calendar.dateComponents([Calendar.Component.day, Calendar.Component.month, Calendar.Component.year, Calendar.Component.hour, Calendar.Component.minute], from: date)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+
+                print("NOTIFICATION CREATED")
+                print(request)
+                
+                UNUserNotificationCenter.current().add(request)
+    
+            } else {
+                block()
+            }
+        }
+    }
 }
 
 struct Task: Codable, Hashable {
@@ -13,6 +46,7 @@ struct Task: Codable, Hashable {
     var completed: Bool = false
     var dateCreated = Date()
     var dateReminder = Date()
+    var dateReminderInterval: String = ""
     var dateReminderSet: Bool = false
 }
 
@@ -52,6 +86,11 @@ class TaskObservable: ObservableObject {
             setDateReminder(oldValue)
         }
     }
+    @Published var dateReminderInterval: String {
+        didSet {
+            setDateReminderInterval(oldValue)
+        }
+    }
     @Published var dateReminderSet: Bool {
         didSet {
             setDateReminderSet(oldValue)
@@ -67,6 +106,7 @@ class TaskObservable: ObservableObject {
         self.completed = task.completed
         self.dateCreated = task.dateCreated
         self.dateReminder = task.dateReminder
+        self.dateReminderInterval = task.dateReminderInterval
         self.dateReminderSet = task.dateReminderSet
     }
 
@@ -131,26 +171,44 @@ class TaskObservable: ObservableObject {
     }
     
     func setDateReminder(_ oldValue: Date) {
-        if self.dateReminder != oldValue {
+        if self.dateReminderSet {
+            KettleHelper().setNotification(id: self.id, date: self.dateReminder, contents: self.name) {
+                self.dateReminderSet = false
+            }
+        }
+        
+        let index = self.db.tasks.firstIndex { $0.id == self.id }
+        
+        if index != nil {
+            self.db.tasks[index!].dateReminder = self.dateReminder
+        }
+    }
+    
+    func setDateReminderInterval(_ oldValue: String) {
+        if self.dateReminderInterval != oldValue {
             throttler.throttle {
                 let index = self.db.tasks.firstIndex { $0.id == self.id }
                 
                 if index != nil {
-                    self.db.tasks[index!].dateReminder = self.dateReminder
+                    self.db.tasks[index!].dateReminderInterval = self.dateReminderInterval
                 }
             }
         }
     }
     
     func setDateReminderSet(_ oldValue: Bool) {
-        if self.dateReminderSet != oldValue {
-            throttler.throttle {
-                let index = self.db.tasks.firstIndex { $0.id == self.id }
-                
-                if index != nil {
-                    self.db.tasks[index!].dateReminderSet = self.dateReminderSet
-                }
+        if self.dateReminderSet {
+            KettleHelper().setNotification(id: self.id, date: self.dateReminder, contents: self.name) {
+                self.dateReminderSet = false
             }
+        } else {
+            KettleHelper().clearNotification(id: self.id)
+        }
+        
+        let index = self.db.tasks.firstIndex { $0.id == self.id }
+        
+        if index != nil {
+            self.db.tasks[index!].dateReminderSet = self.dateReminderSet
         }
     }
 }
