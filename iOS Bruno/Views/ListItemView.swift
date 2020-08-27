@@ -8,7 +8,7 @@ struct ListItemView: View {
     @Binding var showLists: Bool
     
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
             Button(action: {
                 self.currentListId = self.list.id
                 self.showLists = false

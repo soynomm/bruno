@@ -13,11 +13,12 @@ struct SubTaskItemView: View {
     
     var body: some View {
         VStack {
-            HStack(alignment: .top) {
+            HStack(alignment: .center) {
                 if task.completed {
                     Image(systemName: "checkmark.circle")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .font(Font.title.weight(.light))
                         .frame(width: 22, height: 22, alignment: .topLeading)
                         .onTapGesture {
                             self.completeTask()
@@ -26,13 +27,19 @@ struct SubTaskItemView: View {
                     Image(systemName: "circle")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .font(Font.title.weight(.light))
                         .frame(width: 22, height: 22, alignment: .topLeading)
                         .onTapGesture {
                             self.completeTask()
                         }
                 }
                 
-                TextField("Task name", text: $task.name)
+                if task.completed {
+                    Text(task.name)
+                    .strikethrough()
+                } else {
+                    TextField("Task name", text: $task.name)
+                }
             }
         }
     }

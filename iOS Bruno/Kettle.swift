@@ -441,7 +441,7 @@ class Kettle {
         let fileContents = try? String(contentsOf: documentsDirectory.appendingPathComponent("db.json"), encoding: .utf8)
         let decoder = JSONDecoder()
         let fileContentsData = try? decoder.decode(Database.self, from: Data(fileContents!.utf8))
-        return fileContentsData!
+        return fileContentsData ?? Database()
     }
     
     func write(_ db: DatabaseObservable) {

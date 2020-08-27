@@ -12,17 +12,17 @@ struct TaskItemView: View {
             task.completed = false
         } else {
             task.completed = true
-            task.dateReminderSet = false
         }
     }
     
     var body: some View {
         VStack {
-            HStack(alignment: .top) {
+            HStack(alignment: .center) {
                 if task.completed {
                     Image(systemName: "checkmark.circle")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .font(Font.title.weight(.light))
                         .frame(width: 22, height: 22, alignment: .topLeading)
                         .onTapGesture {
                             self.completeTask()
@@ -31,6 +31,7 @@ struct TaskItemView: View {
                     Image(systemName: "circle")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .font(Font.title.weight(.light))
                         .frame(width: 22, height: 22, alignment: .topLeading)
                         .onTapGesture {
                             self.completeTask()
@@ -40,6 +41,7 @@ struct TaskItemView: View {
                 if task.completed {
                     Text(task.name)
                     .strikethrough()
+                    .padding(.top, 1)
                 } else {
                     TextField("Task name", text: $task.name)
                 }
@@ -52,7 +54,8 @@ struct TaskItemView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(Color.red)
-                            .frame(width: 19, height: 19)
+                            .font(Font.title.weight(.light))
+                            .frame(width: 17, height: 17)
                             .onTapGesture {
                                 self.showTaskInfo = true
                         }
@@ -61,7 +64,8 @@ struct TaskItemView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(Color.blue)
-                            .frame(width: 19, height: 19)
+                            .font(Font.title.weight(.light))
+                            .frame(width: 17, height: 17)
                             .onTapGesture {
                                 self.showTaskInfo = true
                         }
@@ -71,7 +75,9 @@ struct TaskItemView: View {
                 Image(systemName: "info.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 19, height: 19)
+                    .foregroundColor(Color.secondary)
+                    .font(Font.title.weight(.light))
+                    .frame(width: 17, height: 17)
                     .onTapGesture {
                         self.showTaskInfo = true
                     }

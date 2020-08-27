@@ -58,6 +58,10 @@ struct ContentRegularView: View {
 			self.showLists.toggle()
 		}, label: {
 			Image(systemName: "tray.2")
+			.resizable()
+			.aspectRatio(contentMode: .fit)
+			.font(Font.title.weight(.light))
+			.frame(width: 20, height: 20)
 		})
 	}
 	
@@ -66,6 +70,7 @@ struct ContentRegularView: View {
 			Image(systemName: "plus")
 			.resizable()
 			.aspectRatio(contentMode: .fit)
+			.font(Font.title.weight(.light))
 			.frame(width: 18, height: 18)
 		})
 	}
