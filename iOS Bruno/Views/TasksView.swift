@@ -3,6 +3,7 @@ import SwiftUI
 struct TasksView: View {
     @ObservedObject var db: DatabaseObservable
     @State var hideCompletedTasks: Bool = false
+    @State var counter: Int = 0
     var listId: String
 
     func getTaskListItems(completed: Bool) -> [Task] {
@@ -94,8 +95,12 @@ struct TasksView: View {
                     completedTasksSection()
                 }
             }
+            .id(self.counter)
             .listStyle(GroupedListStyle())
             
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            self.counter += 1
         }
     }
 }

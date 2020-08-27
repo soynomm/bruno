@@ -47,9 +47,33 @@ struct TaskItemView: View {
                 }
                 
                 Spacer()
+                
+                if task.dueDateSet && !task.completed {
+                    if task.dueDate < Date() {
+                        Image(systemName: "clock")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(Color.red)
+                            .font(Font.title.weight(.light))
+                            .frame(width: 17, height: 17)
+                            .onTapGesture {
+                                self.showTaskInfo = true
+                        }
+                    } else {
+                        Image(systemName: "clock")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(Color.blue)
+                            .font(Font.title.weight(.light))
+                            .frame(width: 17, height: 17)
+                            .onTapGesture {
+                                self.showTaskInfo = true
+                        }
+                    }
+                }
 
-                if task.dateReminderSet && !task.completed {
-                    if task.dateReminder < Date() {
+                if task.dueDateReminderSet && !task.completed {
+                    if task.dueDate < Date() {
                         Image(systemName: "bell")
                             .resizable()
                             .aspectRatio(contentMode: .fit)

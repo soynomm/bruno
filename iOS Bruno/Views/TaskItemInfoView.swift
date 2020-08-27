@@ -17,7 +17,7 @@ struct TaskItemInfoView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Reminder").padding(.top, 15)) {
+                Section(header: Text("Date & Time").padding(.top, 15)) {
                     HStack {
                         Image(systemName: "calendar")
                         .resizable()
@@ -29,20 +29,26 @@ struct TaskItemInfoView: View {
                             showDatePicker.toggle()
                         }
                         
-                        Text("\(task.dateReminder, formatter: dateFormatter())")
+                        Text("\(task.dueDate, formatter: dateFormatter())")
                         .padding(.leading, 3)
                         .onTapGesture {
                             showDatePicker.toggle()
                         }
-
-                        //Rectangle().fill(Color.clear).frame(width:40)
-                        Spacer()
-                        Toggle("", isOn: $task.dateReminderSet).labelsHidden()
                     }
                     if showDatePicker {
-                        DatePicker("", selection: $task.dateReminder)
+                        DatePicker("", selection: $task.dueDate)
                         .labelsHidden()
                         .datePickerStyle(WheelDatePickerStyle())
+                    }
+                    HStack {
+                        Text("Due date")
+                        Spacer()
+                        Toggle("", isOn: $task.dueDateSet).labelsHidden()
+                    }
+                    HStack {
+                        Text("Reminder")
+                        Spacer()
+                        Toggle("", isOn: $task.dueDateReminderSet).labelsHidden()
                     }
                 }
 

@@ -45,9 +45,10 @@ struct Task: Codable, Hashable {
     var notes: String = ""
     var completed: Bool = false
     var dateCreated = Date()
-    var dateReminder = Date()
-    var dateReminderInterval: String = ""
-    var dateReminderSet: Bool = false
+    var dueDate = Date()
+    var dueDateSet: Bool = false
+    var dueDateReminderSet: Bool = false
+    var dueDateReminderInterval: String = ""
 }
 
 class TaskObservable: ObservableObject {
@@ -81,19 +82,24 @@ class TaskObservable: ObservableObject {
             setDateCreated(oldValue)
         }
     }
-    @Published var dateReminder: Date {
+    @Published var dueDate: Date {
         didSet {
-            setDateReminder(oldValue)
+            setDueDate(oldValue)
         }
     }
-    @Published var dateReminderInterval: String {
+    @Published var dueDateSet: Bool {
         didSet {
-            setDateReminderInterval(oldValue)
+            setDueDateSet(oldValue)
         }
     }
-    @Published var dateReminderSet: Bool {
+    @Published var dueDateReminderSet: Bool {
         didSet {
-            setDateReminderSet(oldValue)
+            setDueDateReminderSet(oldValue)
+        }
+    }
+    @Published var dueDateReminderInterval: String {
+        didSet {
+            setDueDateReminderInterval(oldValue)
         }
     }
     
@@ -105,9 +111,10 @@ class TaskObservable: ObservableObject {
         self.notes = task.notes
         self.completed = task.completed
         self.dateCreated = task.dateCreated
-        self.dateReminder = task.dateReminder
-        self.dateReminderInterval = task.dateReminderInterval
-        self.dateReminderSet = task.dateReminderSet
+        self.dueDate = task.dueDate
+        self.dueDateSet = task.dueDateSet
+        self.dueDateReminderSet = task.dueDateReminderSet
+        self.dueDateReminderInterval = task.dueDateReminderInterval
     }
 
     func setListId(_ oldValue: String) {
@@ -170,36 +177,34 @@ class TaskObservable: ObservableObject {
         }
     }
     
-    func setDateReminder(_ oldValue: Date) {
-        if self.dateReminderSet {
-            KettleHelper().setNotification(id: self.id, date: self.dateReminder, contents: self.name) {
-                self.dateReminderSet = false
+    func setDueDate(_ oldValue: Date) {
+        if self.dueDateReminderSet {
+            KettleHelper().setNotification(id: self.id, date: self.dueDate, contents: self.name) {
+                self.dueDateReminderSet = false
             }
         }
         
         let index = self.db.tasks.firstIndex { $0.id == self.id }
         
         if index != nil {
-            self.db.tasks[index!].dateReminder = self.dateReminder
+            self.db.tasks[index!].dueDate = self.dueDate
         }
     }
     
-    func setDateReminderInterval(_ oldValue: String) {
-        if self.dateReminderInterval != oldValue {
-            throttler.throttle {
-                let index = self.db.tasks.firstIndex { $0.id == self.id }
-                
-                if index != nil {
-                    self.db.tasks[index!].dateReminderInterval = self.dateReminderInterval
-                }
+    func setDueDateSet(_ oldValue: Bool) {
+        throttler.throttle {
+            let index = self.db.tasks.firstIndex { $0.id == self.id }
+            
+            if index != nil {
+                self.db.tasks[index!].dueDateSet = self.dueDateSet
             }
         }
     }
     
-    func setDateReminderSet(_ oldValue: Bool) {
-        if self.dateReminderSet {
-            KettleHelper().setNotification(id: self.id, date: self.dateReminder, contents: self.name) {
-                self.dateReminderSet = false
+    func setDueDateReminderSet(_ oldValue: Bool) {
+        if self.dueDateReminderSet {
+            KettleHelper().setNotification(id: self.id, date: self.dueDate, contents: self.name) {
+                self.dueDateReminderSet = false
             }
         } else {
             KettleHelper().clearNotification(id: self.id)
@@ -208,7 +213,19 @@ class TaskObservable: ObservableObject {
         let index = self.db.tasks.firstIndex { $0.id == self.id }
         
         if index != nil {
-            self.db.tasks[index!].dateReminderSet = self.dateReminderSet
+            self.db.tasks[index!].dueDateReminderSet = self.dueDateReminderSet
+        }
+    }
+    
+    func setDueDateReminderInterval(_ oldValue: String) {
+        if self.dueDateReminderInterval != oldValue {
+            throttler.throttle {
+                let index = self.db.tasks.firstIndex { $0.id == self.id }
+                
+                if index != nil {
+                    self.db.tasks[index!].dueDateReminderInterval = self.dueDateReminderInterval
+                }
+            }
         }
     }
 }
