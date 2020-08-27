@@ -2,7 +2,6 @@ import SwiftUI
 
 struct TasksView: View {
     @ObservedObject var db: DatabaseObservable
-    @State var hideCompletedTasks: Bool = false
     @State var counter: Int = 0
     var listId: String
 
@@ -52,6 +51,28 @@ struct TasksView: View {
         return hasCompletedTasks
     }
     
+    func hideCompletedTasks() -> Bool {
+        let hideCompletedTasksConfiguration = db.configuration.first { $0.key == "hideCompletedTasks" }
+        
+        if hideCompletedTasksConfiguration != nil && hideCompletedTasksConfiguration!.value == "yes" {
+            return true
+        }
+        
+        return false
+    }
+    
+    func setHideCompletedTasks(_ set: Bool) {
+        let index = db.configuration.firstIndex { $0.key == "hideCompletedTasks" }
+        
+        if index != nil {
+            if set {
+                db.configuration[index!].value = "yes"
+            } else {
+                db.configuration[index!].value = "no"
+            }
+        }
+    }
+    
     func unCompletedTasksSection() -> some View {
         return Section {
             ForEach(getTaskListItems(completed: false), id: \.id) { task in
@@ -66,19 +87,19 @@ struct TasksView: View {
             Text("Completed")
             Spacer()
             Button(action: {
-                if self.hideCompletedTasks {
-                    self.hideCompletedTasks = false
+                if self.hideCompletedTasks() {
+                    self.setHideCompletedTasks(false)
                 } else {
-                    self.hideCompletedTasks = true
+                    self.setHideCompletedTasks(true)
                 }
             }, label: {
-                if self.hideCompletedTasks {
+                if self.hideCompletedTasks() {
                     Text("Show completed tasks")
                 } else {
                     Text("Hide completed tasks")
                 }
             })}) {
-                if !self.hideCompletedTasks {
+                if !self.hideCompletedTasks() {
                     ForEach(getTaskListItems(completed: true), id: \.id) { task in
                         TaskItemView(task: TaskObservable(task: task, db: db), db: db, subTasks: db.subTasks)
                     }

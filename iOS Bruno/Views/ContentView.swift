@@ -77,7 +77,7 @@ struct ContentRegularView: View {
 	
 	var body: some View {
 		NavigationView {
-			TasksView(db: db, hideCompletedTasks: false, listId: currentListId)
+			TasksView(db: db, listId: currentListId)
                 
             .navigationBarTitle(getListName(currentListId: self.currentListId))
 			.navigationBarItems(leading: navigationBarLeadingItem(), trailing: navigationBarTrailingItem())
