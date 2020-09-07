@@ -17,7 +17,10 @@
 		6D5F87F024EC26E2008F66D3 /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6D65B8EB24ED490E005C4C71 /* SubTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D65B8EA24ED490E005C4C71 /* SubTasksView.swift */; };
 		6D65B8ED24ED4A87005C4C71 /* SubTaskItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D65B8EC24ED4A87005C4C71 /* SubTaskItemView.swift */; };
-		6DF4EE3C24F2AD9200F238CA /* Kettle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF4EE3B24F2AD9200F238CA /* Kettle.swift */; };
+		6D7754EF24FBD3CC007F9430 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7754EE24FBD3CC007F9430 /* SettingsView.swift */; };
+		6DCA090C2504430100600FA2 /* NavigationBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA090B2504430100600FA2 /* NavigationBarModifier.swift */; };
+		6DCA090E2504432A00600FA2 /* NavigationBarColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCA090D2504432A00600FA2 /* NavigationBarColor.swift */; };
+		6DF4EE3C24F2AD9200F238CA /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF4EE3B24F2AD9200F238CA /* App.swift */; };
 		6DF9DAAE24E9CD5C00247C8F /* TaskItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF9DAAD24E9CD5C00247C8F /* TaskItemView.swift */; };
 		6DF9DAB024EB1CC000247C8F /* ListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF9DAAF24EB1CC000247C8F /* ListsView.swift */; };
 		6DF9DAB224EB1D5600247C8F /* ListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF9DAB124EB1D5600247C8F /* ListItemView.swift */; };
@@ -25,6 +28,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		6D7754EC24F952F2007F9430 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6DF9DAAA24E7CB9900247C8F /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -50,7 +63,11 @@
 		1CFA1C0A24AFD60C00D4241F /* TasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksView.swift; sourceTree = "<group>"; };
 		6D65B8EA24ED490E005C4C71 /* SubTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubTasksView.swift; sourceTree = "<group>"; };
 		6D65B8EC24ED4A87005C4C71 /* SubTaskItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubTaskItemView.swift; sourceTree = "<group>"; };
-		6DF4EE3B24F2AD9200F238CA /* Kettle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kettle.swift; sourceTree = "<group>"; };
+		6D7754DB24F952EF007F9430 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		6D7754EE24FBD3CC007F9430 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		6DCA090B2504430100600FA2 /* NavigationBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarModifier.swift; sourceTree = "<group>"; };
+		6DCA090D2504432A00600FA2 /* NavigationBarColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarColor.swift; sourceTree = "<group>"; };
+		6DF4EE3B24F2AD9200F238CA /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		6DF9DAAD24E9CD5C00247C8F /* TaskItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItemView.swift; sourceTree = "<group>"; };
 		6DF9DAAF24EB1CC000247C8F /* ListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsView.swift; sourceTree = "<group>"; };
 		6DF9DAB124EB1D5600247C8F /* ListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemView.swift; sourceTree = "<group>"; };
@@ -71,7 +88,7 @@
 		1CFA1BD724AFA0F100D4241F = {
 			isa = PBXGroup;
 			children = (
-				1CFA1BE424AFA1CC00D4241F /* iOS Bruno */,
+				1CFA1BE424AFA1CC00D4241F /* iOS */,
 				1CFA1BE324AFA1CC00D4241F /* Products */,
 				6B858D30DF330739FB94DC64 /* Frameworks */,
 			);
@@ -85,19 +102,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1CFA1BE424AFA1CC00D4241F /* iOS Bruno */ = {
+		1CFA1BE424AFA1CC00D4241F /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				1CFA1BE524AFA1CC00D4241F /* AppDelegate.swift */,
 				1CFA1BE724AFA1CC00D4241F /* SceneDelegate.swift */,
-				6DF4EE3B24F2AD9200F238CA /* Kettle.swift */,
+				6DCA090B2504430100600FA2 /* NavigationBarModifier.swift */,
+				6DCA090D2504432A00600FA2 /* NavigationBarColor.swift */,
+				6DF4EE3B24F2AD9200F238CA /* App.swift */,
 				1CFA1C0924AFD5DD00D4241F /* Views */,
 				1CFA1BEB24AFA1CD00D4241F /* Assets.xcassets */,
 				1CFA1BF024AFA1CD00D4241F /* LaunchScreen.storyboard */,
 				1CFA1BF324AFA1CD00D4241F /* Info.plist */,
 				1CFA1BED24AFA1CD00D4241F /* Preview Content */,
 			);
-			path = "iOS Bruno";
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		1CFA1BED24AFA1CD00D4241F /* Preview Content */ = {
@@ -119,6 +138,7 @@
 				6DF9DAB324EB1E3700247C8F /* TaskItemInfoView.swift */,
 				6D65B8EA24ED490E005C4C71 /* SubTasksView.swift */,
 				6D65B8EC24ED4A87005C4C71 /* SubTaskItemView.swift */,
+				6D7754EE24FBD3CC007F9430 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -126,6 +146,7 @@
 		6B858D30DF330739FB94DC64 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6D7754DB24F952EF007F9430 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -133,21 +154,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1CFA1BE124AFA1CC00D4241F /* iOS Bruno */ = {
+		1CFA1BE124AFA1CC00D4241F /* iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1CFA1BF424AFA1CD00D4241F /* Build configuration list for PBXNativeTarget "iOS Bruno" */;
+			buildConfigurationList = 1CFA1BF424AFA1CD00D4241F /* Build configuration list for PBXNativeTarget "iOS" */;
 			buildPhases = (
 				1CFA1BDE24AFA1CC00D4241F /* Sources */,
 				1CFA1BDF24AFA1CC00D4241F /* Frameworks */,
 				1CFA1BE024AFA1CC00D4241F /* Resources */,
 				6DF9DAA724E7CA6F00247C8F /* ShellScript */,
 				6DF9DAAA24E7CB9900247C8F /* Embed Frameworks */,
+				6D7754EC24F952F2007F9430 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "iOS Bruno";
+			name = iOS;
 			productName = "iOS Realm";
 			productReference = 1CFA1BE224AFA1CC00D4241F /* Bruno.app */;
 			productType = "com.apple.product-type.application";
@@ -158,7 +180,7 @@
 		1CFA1BD824AFA0F100D4241F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1150;
+				LastSwiftUpdateCheck = 1200;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
 					1CFA1BE124AFA1CC00D4241F = {
@@ -179,7 +201,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1CFA1BE124AFA1CC00D4241F /* iOS Bruno */,
+				1CFA1BE124AFA1CC00D4241F /* iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -232,8 +254,11 @@
 				6D65B8ED24ED4A87005C4C71 /* SubTaskItemView.swift in Sources */,
 				6D65B8EB24ED490E005C4C71 /* SubTasksView.swift in Sources */,
 				1CFA1BEA24AFA1CC00D4241F /* ContentView.swift in Sources */,
-				6DF4EE3C24F2AD9200F238CA /* Kettle.swift in Sources */,
+				6DCA090E2504432A00600FA2 /* NavigationBarColor.swift in Sources */,
+				6D7754EF24FBD3CC007F9430 /* SettingsView.swift in Sources */,
+				6DF4EE3C24F2AD9200F238CA /* App.swift in Sources */,
 				6DF9DAAE24E9CD5C00247C8F /* TaskItemView.swift in Sources */,
+				6DCA090C2504430100600FA2 /* NavigationBarModifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,7 +378,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_ASSET_PATHS = "\"iOS Bruno/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 5Z47ULP8G6;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -376,7 +401,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "iOS Bruno/Info.plist";
+				INFOPLIST_FILE = iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -431,7 +456,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_ASSET_PATHS = "\"iOS Bruno/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 5Z47ULP8G6;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_PREVIEWS = YES;
@@ -448,7 +473,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "iOS Bruno/Info.plist";
+				INFOPLIST_FILE = iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -479,7 +504,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1CFA1BF424AFA1CD00D4241F /* Build configuration list for PBXNativeTarget "iOS Bruno" */ = {
+		1CFA1BF424AFA1CD00D4241F /* Build configuration list for PBXNativeTarget "iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1CFA1BF524AFA1CD00D4241F /* Debug */,

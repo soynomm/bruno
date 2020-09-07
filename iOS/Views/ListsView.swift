@@ -3,7 +3,7 @@ import SwiftUI
 struct ListsView: View {
     @ObservedObject var db: DatabaseObservable
     @Binding var currentListId: String
-    @Binding var showLists: Bool
+    @Binding var showSheet: Bool
     @State var isEditMode: EditMode = .inactive
     
     func addItem() {
@@ -52,7 +52,7 @@ struct ListsView: View {
                     HStack {
                         Button(action: {
                             self.currentListId = ""
-                            self.showLists = false
+                            self.showSheet = false
                         }, label: {
                             if currentListId == "" {
                                 Text("Inbox")
@@ -72,7 +72,7 @@ struct ListsView: View {
                     }
                     
                     ForEach(db.lists, id: \.id) { list in
-                        ListItemView(list: TaskListObservable(list: list, db: self.db), currentListId: self.$currentListId, editMode: self.isEditMode, taskCount: self.getListTaskCount(listId: list.id), showLists: self.$showLists)
+                        ListItemView(list: TaskListObservable(list: list, db: self.db), currentListId: self.$currentListId, editMode: self.isEditMode, taskCount: self.getListTaskCount(listId: list.id), showSheet: self.$showSheet)
                     }
                     .onDelete(perform: self.delete)
                 }

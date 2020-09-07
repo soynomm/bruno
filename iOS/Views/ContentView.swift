@@ -36,35 +36,10 @@ struct ContentWelcomeView: View {
 
 struct ContentRegularView: View {
 	@ObservedObject var db: DatabaseObservable
-	@State var currentListId: String = ""
-    @State var showLists: Bool = false
+	@State var selectedView = 0
 	
-	func addItem(){
-		db.tasks.append(Task(listId: self.currentListId))
-    }
-    
-    func getListName(currentListId: String) -> String {
-        if currentListId == "" {
-            return "Inbox"
-        } else {
-			return db.lists.filter {
-                $0.id == currentListId
-            }[0].name
-        }
-    }
-	
-	func navigationBarLeadingItem() -> some View {
-		return Button(action: {
-			self.showLists.toggle()
-		}, label: {
-			Image(systemName: "tray.2")
-			.resizable()
-			.aspectRatio(contentMode: .fit)
-			.font(Font.title.weight(.light))
-			.frame(width: 20, height: 20)
-		})
-	}
-	
+
+	/*
 	func navigationBarTrailingItem() -> some View {
 		return Button(action: addItem, label: {
 			Image(systemName: "plus")
@@ -74,22 +49,30 @@ struct ContentRegularView: View {
 			.frame(width: 18, height: 18)
 		})
 	}
+	*/
 	
 	var body: some View {
-		NavigationView {
+		TasksView(db: db)
+		/*
+		TabView {
 			TasksView(db: db, listId: currentListId)
-                
-            .navigationBarTitle(getListName(currentListId: self.currentListId))
-			.navigationBarItems(leading: navigationBarLeadingItem(), trailing: navigationBarTrailingItem())
-			.sheet(isPresented: $showLists, content: {
-				ListsView(db: self.db, currentListId: self.$currentListId, showLists: self.$showLists)
-			})
+			.tabItem {
+				Image(systemName: "checkmark.circle")
+				Text("Tasks")
+			}.tag(0)
+			
+			SettingsView(purgingTasks: purgingTasksConfiguration(), purgingTasksInterval: purgingTasksIntervalConfiguration())
+			.tabItem {
+				Image(systemName: "gear")
+				Text("Settings")
+			}.tag(1)
 		}
+		*/
 	}
 }
 
 struct ContentView: View {
-	@ObservedObject var db = DatabaseObservable(database: Kettle().get())
+	@ObservedObject var db = DatabaseObservable(database: AppDatabase().get())
 
 	func initialize() {
 		// Set up configuration for welcome screen
@@ -99,12 +82,49 @@ struct ContentView: View {
 			db.configuration.append(Configuration(key: "isWelcomeScreen", value: "yes"))
 		}
 		
-		// Set up configuration for completed tasks
-		let hideCompletedTasksConfiguration = db.configuration.first { $0.key == "hideCompletedTasks" }
+		let timer = DispatchSource.makeTimerSource()
 		
-		if hideCompletedTasksConfiguration == nil {
-			db.configuration.append(Configuration(key: "hideCompletedTasks", value: "no"))
+		timer.schedule(deadline: .now(), repeating: .seconds(1))
+		timer.setEventHandler {
+			DispatchQueue.global(qos: .background).async {
+			}
 		}
+		
+		timer.resume()
+		
+	}
+	
+	func save() {
+		// Purge tasks
+		let purgingTasks = db.configuration.first { $0.key == "purgingTasks" }
+		let purgingTasksInterval = db.configuration.first { $0.key == "purgingTasksInterval" }
+		
+		if purgingTasks != nil && purgingTasks!.value == "yes" && purgingTasksInterval != nil {
+			let timeIntervalMonth: Double = 43800 * 60
+			var timeInterval: Double
+			
+			if purgingTasksInterval!.value == "3months" {
+				timeInterval = timeIntervalMonth * 3
+			}
+			
+			else if purgingTasksInterval!.value == "6months" {
+				timeInterval = timeIntervalMonth * 6
+			}
+			
+			else if purgingTasksInterval!.value == "1year" {
+				timeInterval = timeIntervalMonth * 12
+				
+			} else {
+				timeInterval = timeIntervalMonth
+			}
+			
+			db.tasks = db.tasks.filter {
+				$0.completed != true && $0.dateCompleted != nil && $0.dateCompleted!.addingTimeInterval(timeInterval) > Date()
+			}
+		}
+		
+		// Save all work to db
+		AppDatabase().write(db)
 	}
 	
 	func isWelcomeScreen() -> Bool {
@@ -133,12 +153,10 @@ struct ContentView: View {
 			initialize()
 		}
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-			Kettle().write(db)
-			print("willresign")
+			save()
 		}
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
-			Kettle().write(db)
-			print("willterm")
+			save()
 		}
 	}
 }

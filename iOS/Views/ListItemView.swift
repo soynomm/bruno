@@ -5,13 +5,13 @@ struct ListItemView: View {
     @Binding var currentListId: String
     var editMode: EditMode
     var taskCount: Int
-    @Binding var showLists: Bool
+    @Binding var showSheet: Bool
     
     var body: some View {
         HStack(alignment: .center) {
             Button(action: {
                 self.currentListId = self.list.id
-                self.showLists = false
+                self.showSheet = false
             }, label: {
                 if self.editMode == .active {
                     TextField("List name", text: $list.name)

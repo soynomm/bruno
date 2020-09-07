@@ -4,6 +4,7 @@ import UserNotifications
 struct TaskItemInfoView: View {
     @ObservedObject var db: DatabaseObservable
     @ObservedObject var task: TaskObservable
+    @Environment(\.colorScheme) var colorScheme
     var subTasks: [SubTask]
     @State var showDatePicker: Bool = false
     
@@ -30,6 +31,7 @@ struct TaskItemInfoView: View {
                         }
                         
                         Text("\(task.dueDate, formatter: dateFormatter())")
+                        .foregroundColor(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor)
                         .padding(.leading, 3)
                         .onTapGesture {
                             showDatePicker.toggle()
@@ -70,7 +72,7 @@ struct TaskItemInfoView: View {
                     }
                 }
             }
-            .navigationBarHidden(true)
+            .navigationBarTitle(self.task.name, displayMode: .inline)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }

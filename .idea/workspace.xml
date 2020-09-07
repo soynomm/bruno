@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0d6ec90a-148c-4c67-94e8-4f55a915f091" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/iOS/NavigationBarColor.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/iOS/NavigationBarModifier.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/iOS/Preview Content/Preview Assets.xcassets/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/iOS/Views/SettingsView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bruno.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Bruno.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/AppDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/1024.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/1024.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/114.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/114.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/120.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/120.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/180.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/180.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/29.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/29.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/40.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/40.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/57.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/57.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/58.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/58.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/60.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/60.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/80.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/80.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/87.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/87.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/Contents.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/Logo.imageset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/Logo.imageset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/Logo.imageset/bruno-face-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/Logo.imageset/bruno-face-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/Logo.imageset/bruno-face-2.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/Logo.imageset/bruno-face-2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Assets.xcassets/Logo.imageset/bruno-face.png" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/Logo.imageset/bruno-face.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Base.lproj/LaunchScreen.storyboard" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Base.lproj/LaunchScreen.storyboard" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Kettle.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/App.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Preview Content/Preview Assets.xcassets/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/SceneDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/SceneDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Views/ContentView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Views/ContentView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Views/ListItemView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Views/ListItemView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Views/ListsView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Views/ListsView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Views/SubTaskItemView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Views/SubTaskItemView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Views/SubTasksView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Views/SubTasksView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Views/TaskItemInfoView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Views/TaskItemInfoView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Views/TaskItemView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Views/TaskItemView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iOS Bruno/Views/TasksView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/iOS/Views/TasksView.swift" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="iphonesimulator_7AA7D6A4-F911-47FF-8179-275FCDF04706" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1h9bAyWtMS0PG5In4G4rSjh3a4V" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="RunManager">
+    <configuration name="iOS" type="AppleRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Bruno" TARGET_NAME="iOS" CONFIG_NAME="Debug" SCHEME_NAME="iOS" IS_LOCATION_SIMULATION_ALLOWED="true" APPLICATION_LANGUAGE="IDELaunchSchemeLanguageUseSystemLanguage" APPLICATION_REGION="" RUN_TARGET_PROJECT_NAME="Bruno" RUN_TARGET_NAME="iOS" MAKE_ACTIVE="TRUE" SHOULD_DEBUG_EXTENSIONS="false">
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <embedded_app_extension_list />
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0d6ec90a-148c-4c67-94e8-4f55a915f091" name="Default Changelist" comment="" />
+      <created>1599426119094</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599426119094</updated>
+      <workItem from="1599426121314" duration="1210000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="689" y="412" key="#Notifications" timestamp="1599426173256">
+      <screen x="0" y="25" width="1920" height="1119" />
+    </state>
+    <state x="689" y="412" key="#Notifications/0.25.1920.1119@0.25.1920.1119" timestamp="1599426173256" />
+  </component>
+</project>

@@ -96,7 +96,7 @@ struct TaskItemView: View {
                     }
                 }
 
-                Image(systemName: "info.circle")
+                Image(systemName: "i.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(Color.secondary)

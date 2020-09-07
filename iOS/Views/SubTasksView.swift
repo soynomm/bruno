@@ -3,6 +3,7 @@ import SwiftUI
 struct SubTasksView: View {
     var parentId: String
     @ObservedObject var db: DatabaseObservable
+    @Environment(\.colorScheme) var colorScheme
     var subTasks: [SubTask]
 
     func getSubTaskListItems() -> [SubTask] {
@@ -36,12 +37,9 @@ struct SubTasksView: View {
                     SubTaskItemView(task: SubTaskObservable(task: task, db: db))
                 }
                 .onDelete(perform: self.delete)
-            } else {
-                Text("You haven't created any subtasks.")
-                .font(.footnote)
             }
             
-            Button(action: self.addSubTask, label: { Text("Add task").foregroundColor(Color.blue) })
+            Button(action: self.addSubTask, label: { Text("Add task").foregroundColor(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor) })
         }
     }
 }

@@ -1,12 +1,18 @@
 import Foundation
 import SwiftUI
 
-struct KettleConfiguration {
+struct AppConfiguration {
+    @Environment(\.colorScheme) var colorScheme
     var throttlerDelay = 0.3
     var noteThrottler = 1.0
+    var debug = true
+    var primaryColorUI = UIColor(red: 0.86, green: 0.00, blue: 0.36, alpha: 1.00)
+    var primaryColorUIDark = UIColor(red: 1.00, green: 0.15, blue: 0.51, alpha: 1.00)
+    var primaryColor = Color(UIColor(red: 0.86, green: 0.00, blue: 0.36, alpha: 1.00))
+    var primaryColorDark = Color(UIColor(red: 1.00, green: 0.15, blue: 0.51, alpha: 1.00))
 }
 
-class KettleHelper {
+class App {
     public func clearNotification(id: String) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
     }
@@ -26,9 +32,6 @@ class KettleHelper {
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
                 let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
 
-                print("NOTIFICATION CREATED")
-                print(request)
-                
                 UNUserNotificationCenter.current().add(request)
     
             } else {
@@ -43,19 +46,22 @@ struct Task: Codable, Hashable {
     var listId: String = ""
     var name: String = ""
     var notes: String = ""
+    var starred: Bool = false
     var completed: Bool = false
     var dateCreated = Date()
+    var dateCompleted: Date? = nil
     var dueDate = Date()
     var dueDateSet: Bool = false
     var dueDateReminderSet: Bool = false
     var dueDateReminderInterval: String = ""
+    var misc: [String: String] = [:]
 }
 
 class TaskObservable: ObservableObject {
     var id: String
     var db: DatabaseObservable
-    let throttler = Throttler(minimumDelay: KettleConfiguration().throttlerDelay)
-    let noteThrottler = Throttler(minimumDelay: KettleConfiguration().noteThrottler)
+    let throttler = Throttler(minimumDelay: AppConfiguration().throttlerDelay)
+    let noteThrottler = Throttler(minimumDelay: AppConfiguration().noteThrottler)
 
     @Published var listId: String {
         didSet {
@@ -72,6 +78,11 @@ class TaskObservable: ObservableObject {
             setNotes(oldValue)
         }
     }
+    @Published var starred: Bool {
+        didSet {
+            setStarred(oldValue)
+        }
+    }
     @Published var completed: Bool {
         didSet {
             setCompleted(oldValue)
@@ -80,6 +91,11 @@ class TaskObservable: ObservableObject {
     @Published var dateCreated: Date {
         didSet {
             setDateCreated(oldValue)
+        }
+    }
+    @Published var dateCompleted: Date? {
+        didSet {
+            setDateCompleted(oldValue)
         }
     }
     @Published var dueDate: Date {
@@ -109,8 +125,16 @@ class TaskObservable: ObservableObject {
         self.listId = task.listId
         self.name = task.name
         self.notes = task.notes
+        self.starred = task.starred
         self.completed = task.completed
         self.dateCreated = task.dateCreated
+        
+        if task.dateCompleted != nil {
+            self.dateCompleted = task.dateCompleted!
+        } else {
+            self.dateCompleted = nil
+        }
+
         self.dueDate = task.dueDate
         self.dueDateSet = task.dueDateSet
         self.dueDateReminderSet = task.dueDateReminderSet
@@ -153,12 +177,25 @@ class TaskObservable: ObservableObject {
         }
     }
     
+    func setStarred(_ oldValue: Bool) {
+        if self.starred != oldValue {
+            throttler.throttle {
+                let index = self.db.tasks.firstIndex { $0.id == self.id }
+                
+                if index != nil {
+                    self.db.tasks[index!].starred = self.starred
+                }
+            }
+        }
+    }
+    
     func setCompleted(_ oldValue: Bool) {
         if self.completed != oldValue {
             throttler.throttle {
                 let index = self.db.tasks.firstIndex { $0.id == self.id }
                 
                 if index != nil {
+                    self.db.tasks[index!].dateCompleted = Date()
                     self.db.tasks[index!].completed = self.completed
                 }
             }
@@ -177,9 +214,21 @@ class TaskObservable: ObservableObject {
         }
     }
     
+    func setDateCompleted(_ oldValue: Date?) {
+        if self.dateCompleted != oldValue {
+            throttler.throttle {
+                let index = self.db.tasks.firstIndex { $0.id == self.id }
+                
+                if index != nil {
+                    self.db.tasks[index!].dateCompleted = self.dateCompleted
+                }
+            }
+        }
+    }
+    
     func setDueDate(_ oldValue: Date) {
         if self.dueDateReminderSet {
-            KettleHelper().setNotification(id: self.id, date: self.dueDate, contents: self.name) {
+            App().setNotification(id: self.id, date: self.dueDate, contents: self.name) {
                 self.dueDateReminderSet = false
             }
         }
@@ -203,11 +252,11 @@ class TaskObservable: ObservableObject {
     
     func setDueDateReminderSet(_ oldValue: Bool) {
         if self.dueDateReminderSet {
-            KettleHelper().setNotification(id: self.id, date: self.dueDate, contents: self.name) {
+            App().setNotification(id: self.id, date: self.dueDate, contents: self.name) {
                 self.dueDateReminderSet = false
             }
         } else {
-            KettleHelper().clearNotification(id: self.id)
+            App().clearNotification(id: self.id)
         }
         
         let index = self.db.tasks.firstIndex { $0.id == self.id }
@@ -236,12 +285,13 @@ struct SubTask: Codable, Hashable, Identifiable {
     var name: String = ""
     var completed: Bool = false
     var dateCreated = Date()
+    var misc: [String: String] = [:]
 }
 
 class SubTaskObservable: ObservableObject {
     var id: String
     let db: DatabaseObservable
-    let throttler = Throttler(minimumDelay: KettleConfiguration().throttlerDelay)
+    let throttler = Throttler(minimumDelay: AppConfiguration().throttlerDelay)
     
     @Published var parentId: String {
         didSet {
@@ -325,12 +375,13 @@ class SubTaskObservable: ObservableObject {
 struct TaskList: Codable, Hashable {
     var id: String = UUID().uuidString
     var name: String = ""
+    var misc: [String: String] = [:]
 }
 
 class TaskListObservable: ObservableObject {
     var id: String
     let db: DatabaseObservable
-    let throttler = Throttler(minimumDelay: KettleConfiguration().throttlerDelay)
+    let throttler = Throttler(minimumDelay: AppConfiguration().throttlerDelay)
 
     @Published var name: String {
         didSet {
@@ -360,12 +411,13 @@ class TaskListObservable: ObservableObject {
 struct Configuration: Codable, Hashable {
     var key: String
     var value: String
+    var misc: [String: String] = [:]
 }
 
 class ConfigurationObservable: ObservableObject {
     var key: String
     var db: DatabaseObservable
-    let throttler = Throttler(minimumDelay: KettleConfiguration().throttlerDelay)
+    let throttler = Throttler(minimumDelay: AppConfiguration().throttlerDelay)
     @Published var value: String {
         didSet {
             setValue(oldValue)
@@ -386,12 +438,15 @@ class ConfigurationObservable: ObservableObject {
     }
     
     func setValue(_ oldValue: String) {
+        print("SET CONF VAL")
         if self.value != oldValue {
             throttler.throttle {
                 let index = self.db.configuration.firstIndex { $0.key == self.key }
-                
+
                 if index != nil {
                     self.db.configuration[index!].value = self.value
+                } else {
+                    self.db.configuration.append(self.configuration())
                 }
             }
         }
@@ -403,30 +458,48 @@ struct Database: Codable {
     var subTasks: [SubTask] = []
     var lists: [TaskList] = []
     var configuration: [Configuration] = []
+    var syncDate: Date? = nil
+    var misc: [String: String] = [:]
 }
 
 class DatabaseObservable: ObservableObject {
     @Published var tasks: [Task] {
         didSet {
-            print("TASKS UPDATED")
+            if AppConfiguration().debug {
+                print("TASKS UPDATED")
+            }
         }
     }
     
     @Published var subTasks: [SubTask] {
         didSet {
-            print("SUBTASKS UPDATED")
+            if AppConfiguration().debug {
+                print("SUBTASKS UPDATED")
+            }
         }
     }
     
     @Published var lists: [TaskList] {
         didSet {
-            print("LISTS UPDATED")
+            if AppConfiguration().debug {
+                print("LISTS UPDATED")
+            }
+        }
+    }
+    
+    @Published var syncDate: Date? {
+        didSet {
+            if AppConfiguration().debug {
+                print("SYNCED DATA UPDATED")
+            }
         }
     }
     
     @Published var configuration: [Configuration] {
         didSet {
-            print("CONFIGURATION UPDATED")
+            if AppConfiguration().debug {
+                print("CONFIGURATION UPDATED")
+            }
         }
     }
     
@@ -435,11 +508,12 @@ class DatabaseObservable: ObservableObject {
         self.subTasks = database.subTasks
         self.lists = database.lists
         self.configuration = database.configuration
+        self.syncDate = database.syncDate
     }
 }
 
 
-class Kettle {
+class AppDatabase {
     var documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
     
     func initialize() {
@@ -456,8 +530,10 @@ class Kettle {
     func get() -> Database {
         self.initialize()
         let fileContents = try? String(contentsOf: documentsDirectory.appendingPathComponent("db.json"), encoding: .utf8)
+
         let decoder = JSONDecoder()
         let fileContentsData = try? decoder.decode(Database.self, from: Data(fileContents!.utf8))
+
         return fileContentsData ?? Database()
     }
     
