@@ -2,14 +2,17 @@ import Foundation
 import SwiftUI
 
 struct AppConfiguration {
-    @Environment(\.colorScheme) var colorScheme
     var throttlerDelay = 0.3
     var noteThrottler = 1.0
-    var debug = true
+    var debug = false
     var primaryColorUI = UIColor(red: 0.86, green: 0.00, blue: 0.36, alpha: 1.00)
     var primaryColorUIDark = UIColor(red: 1.00, green: 0.15, blue: 0.51, alpha: 1.00)
     var primaryColor = Color(UIColor(red: 0.86, green: 0.00, blue: 0.36, alpha: 1.00))
     var primaryColorDark = Color(UIColor(red: 1.00, green: 0.15, blue: 0.51, alpha: 1.00))
+}
+
+struct AppFeatures {
+    var schedule = false
 }
 
 class App {

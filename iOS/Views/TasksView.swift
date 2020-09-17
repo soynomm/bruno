@@ -83,10 +83,8 @@ struct TasksView: View {
     }
     
     func navigationBarTrailingItem() -> some View {
-        return Button(action: {
-            self.showSheetType = "settings"
-        }, label: {
-            Image(systemName: "gearshape")
+        return Button(action: self.addItem, label: {
+            Image(systemName: "plus")
             .resizable()
             .aspectRatio(contentMode: .fit)
             .font(Font.title.weight(.light))
@@ -158,38 +156,10 @@ struct TasksView: View {
                         } else {
                             completedTasksSection()
                         }
-                        
-                        // Filler for the add task button
-                        Rectangle().fill(colorScheme == .dark ? Color.black : Color.white).frame(width: 1200, height: 75).offset(x: -30, y: 10).edgesIgnoringSafeArea(.all)
                     }
                     .id(self.counter)
                     .listStyle(PlainListStyle())
                     .offset(y: 45)
-                    
-                    if isBottom() {
-                        Button(action: self.addItem, label: {
-                            Image(systemName: "plus")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .font(Font.title.weight(.light))
-                            .frame(width: 18, height: 18)
-                            .foregroundColor(colorScheme == .dark ? .black : .white)
-                            .padding(EdgeInsets(top: 13, leading: 23, bottom: 13, trailing: 23))
-                                .background(Circle().fill(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor).shadow(color: colorScheme == .dark ? .black : .white, radius: 26, x: 0, y: 3))
-                        })
-                    } else {
-                        Button(action: self.addItem, label: {
-                            Image(systemName: "plus")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .font(Font.title.weight(.light))
-                            .frame(width: 18, height: 18)
-                            .foregroundColor(colorScheme == .dark ? .black : .white)
-                            .padding(EdgeInsets(top: 13, leading: 23, bottom: 13, trailing: 23))
-                            .background(Circle().fill(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor).shadow(color: colorScheme == .dark ? .black : .white, radius: 26, x: 0, y: 3))
-                        })
-                        .offset(y: -25)
-                    }
                 }
             }
                 
@@ -199,10 +169,6 @@ struct TasksView: View {
             .sheet(isPresented: showSheet, content: {
                 if self.showSheetType == "lists" {
                     ListsView(db: self.db, currentListId: self.$currentListId, showSheet: showSheet)
-                }
-                
-                if self.showSheetType == "settings" {
-                    SettingsView(purgingTasks: purgingTasksConfiguration(), purgingTasksInterval: purgingTasksIntervalConfiguration())
                 }
             })
         }
