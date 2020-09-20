@@ -2,12 +2,11 @@ import SwiftUI
 import UserNotifications
 
 struct TaskItemInfoView: View {
-    @ObservedObject var db: DatabaseObservable
     @ObservedObject var task: TaskObservable
     @Environment(\.colorScheme) var colorScheme
-    var subTasks: [SubTask]
     @State var showDatePicker: Bool = false
-    
+    @State var taskNotes: String = ""
+
     func dateFormatter() -> DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
@@ -55,25 +54,34 @@ struct TaskItemInfoView: View {
                 }
 
                 Section(header: Text("Subtasks")) {
-                    SubTasksView(parentId: self.task.id, db: self.db, subTasks: self.subTasks)
+                    SubTasksView(parentId: self.task.id)
                 }
                 
                 Section(header: Text("Notes")) {
                     ZStack(alignment: .leading) {
-                        if task.notes.isEmpty {
+                        if taskNotes.isEmpty {
                             Text("Notes ..")
                             .foregroundColor(Color.secondary)
                         }
-                        TextEditor(text: $task.notes)
-                            .offset(x: -5)
-                        Text(task.notes)
-                            .padding(.bottom, 10)
-                            .opacity(0)
+                        TextEditor(text: $taskNotes)
+                        .offset(x: -5)
+                        .onChange(of: taskNotes) { newValue in
+                            self.task.notes = newValue
+                        }
+                        
+                        Text(taskNotes)
+                        .padding(.bottom, 10)
+                        .opacity(0)
                     }
                 }
             }
             .navigationBarTitle(self.task.name, displayMode: .inline)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .onAppear {
+                if self.taskNotes.isEmpty {
+                    self.taskNotes = self.task.notes
+                }
+            }
         }
     }
 }

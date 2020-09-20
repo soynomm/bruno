@@ -1,45 +1,43 @@
 import SwiftUI
 
 struct SubTasksView: View {
-    var parentId: String
-    @ObservedObject var db: DatabaseObservable
     @Environment(\.colorScheme) var colorScheme
-    var subTasks: [SubTask]
+    @State var tasks: [SubTask] = []
+    var parentId: String
+    var throttler = Throttler(minimumDelay: 0.25)
 
-    func getSubTaskListItems() -> [SubTask] {
-        let taskList = db.subTasks.sorted(by: { $0.dateCreated < $1.dateCreated }).filter {
-            $0.parentId == self.parentId
-        }
-        
-        return taskList
-    }
-    
     func addSubTask(){
-        db.subTasks.append(SubTask(parentId: self.parentId))
+        self.tasks.append(SubTask(parentId: self.parentId))
     }
     
     func delete(at offsets: IndexSet) -> Void {
         let indexes = Array(offsets)
         
         for index in indexes {
-            let task = db.subTasks.sorted(by: { $0.dateCreated < $1.dateCreated }).filter {
-                $0.parentId == self.parentId
-            }[index]
-            
-            db.subTasks = db.subTasks.filter { $0.id != task.id }
+            let task = self.tasks[index]
+            let tasks = self.tasks.filter { $0.id != task.id }
+            DataProvider().updateSubTasks(tasks)
+            self.tasks = tasks
         }
     }
     
     var body: some View {
         List {
-            if getSubTaskListItems().count > 0 {
-                ForEach(getSubTaskListItems()) { task in
-                    SubTaskItemView(task: SubTaskObservable(task: task, db: db))
+            if self.tasks.sorted(by: { $0.dateCreated < $1.dateCreated }).count > 0 {
+                ForEach(self.tasks.sorted(by: { $0.dateCreated < $1.dateCreated })) { task in
+                    SubTaskItemView(task: SubTaskObservable(task: task), tasks: self.$tasks)
                 }
                 .onDelete(perform: self.delete)
             }
             
             Button(action: self.addSubTask, label: { Text("Add task").foregroundColor(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor) })
+        }
+        .onAppear {
+            throttler.throttle {
+                if self.tasks.isEmpty {
+                    self.tasks = DataProvider().getSubTasks(self.parentId)
+                }
+            }
         }
     }
 }

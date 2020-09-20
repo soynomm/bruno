@@ -1,19 +1,20 @@
 import SwiftUI
 
 struct ListsView: View {
-    @ObservedObject var db: DatabaseObservable
+    @Binding var lists: [TaskList]
+    @Binding var tasks: [Task]
     @Binding var currentListId: String
     @Binding var showSheet: Bool
     @State var isEditMode: EditMode = .inactive
     
     func addItem() {
-        db.lists.append(TaskList())
+        self.lists.append(TaskList())
         self.isEditMode = .active
     }
     
     func getListTaskCount(listId: String) -> Int {
         var count = 0
-        for task in db.tasks {
+        for task in self.tasks {
             if task.listId == listId && task.completed == false {
                 count += 1
             }
@@ -26,12 +27,14 @@ struct ListsView: View {
         let indexes = Array(offsets)
         
         for index in indexes {
-            let list = db.lists[index]
+            let list = self.lists[index]
             
             // delete tasks
-            for task in db.tasks {
+            for task in self.tasks {
                 if task.listId == list.id {
-                    db.tasks = db.tasks.filter { $0.id != task.id }
+                    let tasks = self.tasks.filter { $0.id != task.id }
+                    DataProvider().updateTasks(tasks)
+                    self.tasks = tasks
                 }
             }
             
@@ -41,7 +44,9 @@ struct ListsView: View {
             }
             
             // delete list
-            db.lists = db.lists.filter { $0.id != list.id }
+            let lists = self.lists.filter { $0.id != list.id }
+            DataProvider().updateLists(lists)
+            self.lists = lists
         }
     }
 
@@ -71,8 +76,8 @@ struct ListsView: View {
                         }
                     }
                     
-                    ForEach(db.lists, id: \.id) { list in
-                        ListItemView(list: TaskListObservable(list: list, db: self.db), currentListId: self.$currentListId, editMode: self.isEditMode, taskCount: self.getListTaskCount(listId: list.id), showSheet: self.$showSheet)
+                    ForEach(self.lists, id: \.id) { list in
+                        ListItemView(list: TaskListObservable(list: list), lists: self.$lists, currentListId: self.$currentListId, editMode: self.isEditMode, taskCount: self.getListTaskCount(listId: list.id), showSheet: self.$showSheet)
                     }
                     .onDelete(perform: self.delete)
                 }

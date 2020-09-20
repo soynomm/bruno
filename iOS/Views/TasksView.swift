@@ -1,70 +1,79 @@
 import SwiftUI
 
 struct TasksView: View {
-    @ObservedObject var db: DatabaseObservable
     @Environment(\.colorScheme) var colorScheme
     @State var currentTab: String = "todo"
     @State var currentListId: String = ""
     @State var showSheetType: String = ""
     @State var counter: Int = 0
-
+    @State var tasks: [Task] = []
+    @State var lists: [TaskList] = []
+    
+    init() {
+        print("Loadd view again")
+    }
+    
     func getTaskListItems(completed: Bool) -> [Task] {
-        let taskList = db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
-            $0.listId == self.currentListId
+        var taskList: [Task] = []
+        
+        if completed {
+            taskList = self.tasks.filter({ $0.listId == self.currentListId && $0.completed == completed }).sorted(by: { $0.dateCompleted! > $1.dateCompleted! })
+        } else {
+            taskList = self.tasks.filter({ $0.listId == self.currentListId && $0.completed == completed }).sorted(by: { $0.dateCreated > $1.dateCreated })
         }
         
-        return taskList.filter {
-            $0.completed == completed
-        }
+        return taskList
     }
     
     func deleteUncompleted(at offsets: IndexSet) -> Void {
         let indexes = Array(offsets)
-        let taskList = db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
+        let taskList = self.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
             $0.listId == self.currentListId && $0.completed == false
         }
         
         for index in indexes {
             let task = taskList[index]
-            db.tasks = db.tasks.filter { $0.id != task.id }
+            let tasks = self.tasks.filter { $0.id != task.id }
+            DataProvider().updateTasks(tasks)
+            self.tasks = self.tasks.filter { $0.id != task.id }
         }
     }
     
     func deleteCompleted(at offsets: IndexSet) -> Void {
         let indexes = Array(offsets)
-        let taskList = db.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
-            $0.listId == self.currentListId && $0.completed == true
-        }
+        let taskList = self.tasks.filter({ $0.listId == self.currentListId && $0.completed == true }).sorted(by: { $0.dateCompleted! > $1.dateCompleted! })
         
         for index in indexes {
             let task = taskList[index]
-            db.tasks = db.tasks.filter { $0.id != task.id }
+            let tasks = self.tasks.filter { $0.id != task.id }
+            DataProvider().updateTasks(tasks)
+            self.tasks = self.tasks.filter { $0.id != task.id }
         }
     }
     
     func unCompletedTasksSection() -> some View {
         return ForEach(getTaskListItems(completed: false), id: \.id) { task in
-            TaskItemView(task: TaskObservable(task: task, db: db), db: db, subTasks: db.subTasks)
+            TaskItemView(task: TaskObservable(task: task), tasks: self.$tasks)
         }
         .onDelete(perform: self.deleteUncompleted)
     }
     
     func completedTasksSection() -> some View {
         return ForEach(getTaskListItems(completed: true), id: \.id) { task in
-            TaskItemView(task: TaskObservable(task: task, db: db), db: db, subTasks: db.subTasks)
+            TaskItemView(task: TaskObservable(task: task), tasks: self.$tasks)
         }
         .onDelete(perform: self.deleteCompleted)
     }
     
     func addItem(){
-        db.tasks.append(Task(listId: self.currentListId))
+        self.tasks.append(Task(listId: self.currentListId))
     }
     
     func getListName(currentListId: String) -> String {
         if currentListId == "" {
             return "Inbox"
         } else {
-            return db.lists.filter {
+            return self.lists.filter {
                 $0.id == currentListId
             }[0].name
         }
@@ -90,34 +99,6 @@ struct TasksView: View {
             .font(Font.title.weight(.light))
             .frame(width: 20, height: 20)
         })
-    }
-    
-    func purgingTasksConfiguration() -> ConfigurationObservable {
-        let configuration = self.db.configuration.first { $0.key == "purgingTasks" }
-        
-        if configuration != nil {
-            return ConfigurationObservable(configuration: configuration!, db: self.db)
-        } else {
-            return ConfigurationObservable(configuration: Configuration(key: "purgingTasks", value: "yes"), db: self.db)
-        }
-    }
-    
-    func purgingTasksIntervalConfiguration() -> ConfigurationObservable {
-        let configuration = self.db.configuration.first { $0.key == "purgingTasksInterval" }
-        
-        if configuration != nil {
-            return ConfigurationObservable(configuration: configuration!, db: self.db)
-        } else {
-            return ConfigurationObservable(configuration: Configuration(key: "purgingTasksInterval", value: "3months"), db: self.db)
-        }
-    }
-    
-    func isBottom() -> Bool {
-        if #available(iOS 11.0, *), let keyWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first, keyWindow.safeAreaInsets.bottom > 0 {
-            return true
-        }
-        
-        return false
     }
     
     var body: some View {
@@ -148,6 +129,10 @@ struct TasksView: View {
                 .padding(.leading, 15)
                 .padding(.trailing, 15)
                 .padding(.bottom, 10)
+                .onChange(of: self.currentTab) { newValue in
+                    print("TAB CHANGED")
+                    self.tasks = DataProvider().getTasks()
+                }
             
                 ZStack(alignment: .bottom) {
                     List {
@@ -168,13 +153,18 @@ struct TasksView: View {
             .navigationBarColor(colorScheme == .dark ? .black : .white)
             .sheet(isPresented: showSheet, content: {
                 if self.showSheetType == "lists" {
-                    ListsView(db: self.db, currentListId: self.$currentListId, showSheet: showSheet)
+                    ListsView(lists: self.$lists, tasks: self.$tasks, currentListId: self.$currentListId, showSheet: showSheet)
                 }
             })
-        }
-        .id(self.counter)
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-            self.counter += 1
+            .onAppear {
+                if self.tasks.isEmpty {
+                    self.tasks = DataProvider().getTasks()
+                }
+                
+                if self.lists.isEmpty {
+                    self.lists = DataProvider().getLists()
+                }
+            }
         }
     }
 }

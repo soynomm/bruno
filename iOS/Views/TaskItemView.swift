@@ -2,16 +2,28 @@ import SwiftUI
 
 struct TaskItemView: View {
     @ObservedObject var task: TaskObservable
-    @ObservedObject var db: DatabaseObservable
-    var subTasks: [SubTask]
+    @Binding var tasks: [Task]
     @State var showInfoButton: Bool = false
     @State var showTaskInfo: Bool = false
+    var throttler = Throttler(minimumDelay: 0.25)
     
     func completeTask() {
+        let taskIndex = tasks.firstIndex { $0.id == task.id }
+        
         if task.completed {
             task.completed = false
+            
+            throttler.throttle {
+                self.tasks[taskIndex!].completed = false
+                self.tasks[taskIndex!].dateCompleted = Date()
+            }
         } else {
             task.completed = true
+            
+            throttler.throttle {
+                self.tasks[taskIndex!].completed = true
+                self.tasks[taskIndex!].dateCompleted = Date()
+            }
         }
     }
     
@@ -44,6 +56,12 @@ struct TaskItemView: View {
                     .padding(.top, 1)
                 } else {
                     TextField("Task name", text: $task.name)
+                    .onChange(of: task.name) { newValue in
+                        throttler.throttle {
+                            let index = self.tasks.firstIndex { $0.id == task.id }
+                            self.tasks[index!].name = newValue
+                        }
+                    }
                 }
                 
                 Spacer()
@@ -109,7 +127,7 @@ struct TaskItemView: View {
             }
         }
         .sheet(isPresented: $showTaskInfo, content: {
-            TaskItemInfoView(db: self.db, task: self.task, subTasks: self.subTasks)
+            TaskItemInfoView(task: self.task)
         })
     }
 }

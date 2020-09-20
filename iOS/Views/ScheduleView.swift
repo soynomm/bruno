@@ -5,8 +5,6 @@
 import SwiftUI
 
 struct ScheduleView: View {
-    @ObservedObject var db: DatabaseObservable
-
     var body: some View {
         NavigationView {
             Text("Hello")
