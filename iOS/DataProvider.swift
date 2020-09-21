@@ -62,11 +62,8 @@ class DataProvider {
         let index = data.configuration.firstIndex { $0.key == key }
         
         if index != nil {
-            print("configuration exist")
-            print(data.configuration[index!])
             return data.configuration[index!]
         } else {
-            print("configuration does not exist")
             return nil
         }
     }
@@ -78,12 +75,8 @@ class DataProvider {
             let index = data.tasks.firstIndex { $0.id == task.id }
             
             if index != nil {
-                print("Updating task:")
-                print(task)
                 data.tasks[index!] = task
             } else {
-                print("Creating task:")
-                print(task)
                 data.tasks.append(task)
             }
             
@@ -93,7 +86,6 @@ class DataProvider {
     
     public func updateTasks(_ tasks: [Task]) {
         DispatchQueue.global(qos: .background).async {
-            print("Updating tasks")
             var data = self.read()
             data.tasks = tasks
             self.write(data)
@@ -106,12 +98,8 @@ class DataProvider {
             let index = data.subTasks.firstIndex { $0.id == task.id }
             
             if index != nil {
-                print("Updating subtask:")
-                print(task)
                 data.subTasks[index!] = task
             } else {
-                print("Creating subtask:")
-                print(task)
                 data.subTasks.append(task)
             }
             
@@ -121,7 +109,6 @@ class DataProvider {
     
     public func updateSubTasks(_ tasks: [SubTask]) {
         DispatchQueue.global(qos: .background).async {
-            print("Updating subtasks")
             var data = self.read()
             data.subTasks = tasks
             self.write(data)
@@ -135,12 +122,8 @@ class DataProvider {
             let index = data.lists.firstIndex { $0.id == list.id }
             
             if index != nil {
-                print("Updating list")
-                print(list)
                 data.lists[index!] = list
             } else {
-                print("Creating list")
-                print(list)
                 data.lists.append(list)
             }
             
@@ -150,7 +133,6 @@ class DataProvider {
     
     public func updateLists(_ lists: [TaskList]) {
         DispatchQueue.global(qos: .background).async {
-            print("Updating lists")
             var data = self.read()
             data.lists = lists
             self.write(data)
@@ -163,12 +145,8 @@ class DataProvider {
             let index = data.configuration.firstIndex { $0.key == configuration.key }
             
             if index != nil {
-                print("Updating configuration")
-                print(configuration)
                 data.configuration[index!] = configuration
             } else {
-                print("Creating configuration")
-                print(configuration)
                 data.configuration.append(configuration)
             }
             

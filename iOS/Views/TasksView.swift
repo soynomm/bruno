@@ -9,10 +9,6 @@ struct TasksView: View {
     @State var tasks: [Task] = []
     @State var lists: [TaskList] = []
     
-    init() {
-        print("Loadd view again")
-    }
-    
     func getTaskListItems(completed: Bool) -> [Task] {
         var taskList: [Task] = []
         
@@ -164,6 +160,8 @@ struct TasksView: View {
                 if self.lists.isEmpty {
                     self.lists = DataProvider().getLists()
                 }
+                
+                self.counter += 1
             }
         }
     }
