@@ -1,6 +1,7 @@
 import SwiftUI
 
-struct TasksView: View {
+struct TasksView: View
+{
     @Environment(\.colorScheme) var colorScheme
     @State var currentTab: String = "todo"
     @State var currentListId: String = ""
@@ -9,7 +10,8 @@ struct TasksView: View {
     @State var tasks: [Task] = []
     @State var lists: [TaskList] = []
     
-    func getTaskListItems(completed: Bool) -> [Task] {
+    func getTaskListItems(completed: Bool) -> [Task]
+    {
         var taskList: [Task] = []
         
         if completed {
@@ -21,7 +23,8 @@ struct TasksView: View {
         return taskList
     }
     
-    func deleteUncompleted(at offsets: IndexSet) -> Void {
+    func deleteUncompleted(at offsets: IndexSet) -> Void
+    {
         let indexes = Array(offsets)
         let taskList = self.tasks.sorted(by: { $0.dateCreated > $1.dateCreated }).filter {
             $0.listId == self.currentListId && $0.completed == false
@@ -35,7 +38,8 @@ struct TasksView: View {
         }
     }
     
-    func deleteCompleted(at offsets: IndexSet) -> Void {
+    func deleteCompleted(at offsets: IndexSet) -> Void
+    {
         let indexes = Array(offsets)
         let taskList = self.tasks.filter({ $0.listId == self.currentListId && $0.completed == true }).sorted(by: { $0.dateCompleted! > $1.dateCompleted! })
         
@@ -47,35 +51,64 @@ struct TasksView: View {
         }
     }
     
-    func unCompletedTasksSection() -> some View {
+    func unCompletedTasksSection() -> some View
+    {
         return ForEach(getTaskListItems(completed: false), id: \.id) { task in
             TaskItemView(task: TaskObservable(task: task), tasks: self.$tasks)
         }
         .onDelete(perform: self.deleteUncompleted)
     }
     
-    func completedTasksSection() -> some View {
+    func completedTasksSection() -> some View
+    {
         return ForEach(getTaskListItems(completed: true), id: \.id) { task in
             TaskItemView(task: TaskObservable(task: task), tasks: self.$tasks)
         }
         .onDelete(perform: self.deleteCompleted)
     }
     
-    func addItem(){
-        self.tasks.append(Task(listId: self.currentListId))
-    }
-    
-    func getListName(currentListId: String) -> String {
-        if currentListId == "" {
-            return "Inbox"
-        } else {
-            return self.lists.filter {
-                $0.id == currentListId
-            }[0].name
+    // Create a new task.
+    func addItem()
+    {
+        // If the current tab is "done" then change it back to "todo" before
+        if self.currentTab == "done" {
+            self.currentTab = "todo"
+        }
+        
+        // But only if the topmost task is not empty!
+        // And also with a 0.25s delay, because we need to wait
+        // for the tab to actually change.
+        //
+        // Note: there's probably a better way to do this.
+        let throttler = Throttler(minimumDelay: 0.25)
+        
+        throttler.throttle {
+            let topMostTask = getTaskListItems(completed: false).first
+            
+            if topMostTask != nil && !topMostTask!.name.isEmpty {
+                self.tasks.append(Task(listId: self.currentListId))
+            }
         }
     }
     
-    func navigationBarLeadingItem() -> some View {
+    // Return the currently active list name
+    func listName(_ listId: String) -> String
+    {
+        if listId == "" {
+            return "Inbox"
+        } else {
+            let list = self.lists.filter({ $0.id == listId }).first
+            
+            if list != nil {
+                return list!.name
+            } else {
+                return ""
+            }
+        }
+    }
+    
+    func navigationBarLeadingItem() -> some View
+    {
         return Button(action: {
             self.showSheetType = "lists"
         }, label: {
@@ -87,7 +120,8 @@ struct TasksView: View {
         })
     }
     
-    func navigationBarTrailingItem() -> some View {
+    func navigationBarTrailingItem() -> some View
+    {
         return Button(action: self.addItem, label: {
             Image(systemName: "plus")
             .resizable()
@@ -126,7 +160,6 @@ struct TasksView: View {
                 .padding(.trailing, 15)
                 .padding(.bottom, 10)
                 .onChange(of: self.currentTab) { newValue in
-                    print("TAB CHANGED")
                     self.tasks = DataProvider().getTasks()
                 }
             
@@ -144,7 +177,7 @@ struct TasksView: View {
                 }
             }
                 
-            .navigationBarTitle(getListName(currentListId: self.currentListId), displayMode: .inline)
+            .navigationBarTitle(listName(self.currentListId), displayMode: .inline)
             .navigationBarItems(leading: navigationBarLeadingItem(), trailing: navigationBarTrailingItem())
             .navigationBarColor(colorScheme == .dark ? .black : .white)
             .sheet(isPresented: showSheet, content: {

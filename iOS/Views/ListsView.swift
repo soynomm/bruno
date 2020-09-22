@@ -7,20 +7,22 @@ struct ListsView: View {
     @Binding var showSheet: Bool
     @State var isEditMode: EditMode = .inactive
     
-    func addItem() {
-        self.lists.append(TaskList())
-        self.isEditMode = .active
+    // Create a new list.
+    func addItem()
+    {
+        // But only if the last list is not empty!
+        let lastList = self.lists.last
+        
+        if lastList != nil && !lastList!.name.isEmpty {
+            self.lists.append(TaskList())
+            self.isEditMode = .active
+        }
     }
     
-    func getListTaskCount(listId: String) -> Int {
-        var count = 0
-        for task in self.tasks {
-            if task.listId == listId && task.completed == false {
-                count += 1
-            }
-        }
-        
-        return count
+    // Get the number of tasks within a list.
+    func getListTaskCount(listId: String) -> Int
+    {
+        return self.tasks.filter({ $0.listId == listId && $0.completed == false }).count
     }
 
     func delete(at offsets: IndexSet) -> Void {

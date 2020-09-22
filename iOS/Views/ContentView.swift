@@ -5,7 +5,9 @@ struct ContentWelcomeView: View {
 	@Environment(\.colorScheme) var colorScheme
 	var onlyLogo: Bool = false
 	
-	func disableWelcomeScreen() -> Void {
+	// Disable the welcome screen.
+	func disableWelcomeScreen() -> Void
+	{
 		isWelcomeScreenConfiguration.value = "no"
 	}
 	
