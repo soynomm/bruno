@@ -22,6 +22,7 @@
 		6DCF265B251743AB0018E528 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCF265A251743AB0018E528 /* DataProvider.swift */; };
 		6DCF265D2517A7AB0018E528 /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCF265C2517A7AB0018E528 /* Throttler.swift */; };
 		6DCF265F251A64CE0018E528 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCF265E251A64CE0018E528 /* Extensions.swift */; };
+		6DCF2661251B3F2E0018E528 /* NotificationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCF2660251B3F2E0018E528 /* NotificationProvider.swift */; };
 		6DF4EE3C24F2AD9200F238CA /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF4EE3B24F2AD9200F238CA /* App.swift */; };
 		6DF9DAAE24E9CD5C00247C8F /* TaskItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF9DAAD24E9CD5C00247C8F /* TaskItemView.swift */; };
 		6DF9DAB024EB1CC000247C8F /* ListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF9DAAF24EB1CC000247C8F /* ListsView.swift */; };
@@ -71,6 +72,7 @@
 		6DCF265A251743AB0018E528 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		6DCF265C2517A7AB0018E528 /* Throttler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
 		6DCF265E251A64CE0018E528 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		6DCF2660251B3F2E0018E528 /* NotificationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationProvider.swift; sourceTree = "<group>"; };
 		6DF4EE3B24F2AD9200F238CA /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		6DF9DAAD24E9CD5C00247C8F /* TaskItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItemView.swift; sourceTree = "<group>"; };
 		6DF9DAAF24EB1CC000247C8F /* ListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsView.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				6DF4EE3B24F2AD9200F238CA /* App.swift */,
 				1CFA1BE524AFA1CC00D4241F /* AppDelegate.swift */,
 				6DCF265A251743AB0018E528 /* DataProvider.swift */,
+				6DCF2660251B3F2E0018E528 /* NotificationProvider.swift */,
 				1CFA1BE724AFA1CC00D4241F /* SceneDelegate.swift */,
 				6DCA090B2504430100600FA2 /* NavigationBarModifier.swift */,
 				6DCA090D2504432A00600FA2 /* NavigationBarColor.swift */,
@@ -261,6 +264,7 @@
 				6DF9DAB424EB1E3700247C8F /* TaskItemInfoView.swift in Sources */,
 				1CFA1C0B24AFD60C00D4241F /* TasksView.swift in Sources */,
 				6D65B8ED24ED4A87005C4C71 /* SubTaskItemView.swift in Sources */,
+				6DCF2661251B3F2E0018E528 /* NotificationProvider.swift in Sources */,
 				6D65B8EB24ED490E005C4C71 /* SubTasksView.swift in Sources */,
 				1CFA1BEA24AFA1CC00D4241F /* ContentView.swift in Sources */,
 				6DCA090E2504432A00600FA2 /* NavigationBarColor.swift in Sources */,
