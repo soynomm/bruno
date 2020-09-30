@@ -67,9 +67,9 @@ class DataProvider
     }
     
     // Read the database from the disk and return [SubTask].
-    public func getSubTasks(_ parentId: String) -> [SubTask]
+    public func getSubTasks() -> [SubTask]
     {
-        return self.read().subTasks.filter { $0.parentId == parentId }
+        return self.read().subTasks
     }
     
     // Read the database from the disk and return [TaskList].

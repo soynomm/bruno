@@ -43,6 +43,12 @@ class App {
     }
 }
 
+struct TaskSchedule: Codable, Hashable
+{
+    var date: Date
+    var tasks: [Task]
+}
+
 struct Task: Codable, Hashable {
     var id: String = UUID().uuidString
     var listId: String = ""
@@ -175,6 +181,9 @@ class TaskObservable: ObservableObject {
             throttler.throttle {
                 let task = self
                 task.dateCompleted = Date()
+                print("completing task:")
+                print(task)
+                print(self)
                 DataProvider().updateTask(task)
             }
         }

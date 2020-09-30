@@ -13,7 +13,14 @@ struct ListsView: View {
         // But only if the last list is not empty!
         let lastList = self.lists.last
         
+        // If the last list exists
         if lastList != nil && !lastList!.name.isEmpty {
+            self.lists.append(TaskList())
+            self.isEditMode = .active
+        }
+        
+        // If there is no last list (means there are no lists)
+        if lastList == nil {
             self.lists.append(TaskList())
             self.isEditMode = .active
         }

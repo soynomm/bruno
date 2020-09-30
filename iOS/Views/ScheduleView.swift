@@ -5,11 +5,21 @@
 import SwiftUI
 
 struct ScheduleView: View {
+    @State var tasks: [Task] = []
+    
     var body: some View {
         NavigationView {
-            Text("Hello")
+            List {
+                ForEach(self.tasks, id: \.self) { task in
+                    Text(task.name)
+                }
+            }
 
             .navigationBarTitle("Schedule", displayMode: .inline)
+        }.onAppear {
+            if self.tasks.isEmpty {
+                self.tasks = DataProvider().getTasks()
+            }
         }
     }
 }

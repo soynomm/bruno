@@ -6,8 +6,10 @@ struct TaskItemView: View {
     @State var showInfoButton: Bool = false
     @State var showTaskInfo: Bool = false
     var throttler = Throttler(minimumDelay: 0.25)
+    var onComplete: (() -> Void)
     
-    func completeTask() {
+    func completeTask()
+    {
         let taskIndex = tasks.firstIndex { $0.id == task.id }
         
         if task.completed {
@@ -29,16 +31,15 @@ struct TaskItemView: View {
     
     var body: some View {
         VStack {
-            HStack(alignment: .center) {
+            HStack(alignment: .top) {
                 if task.completed {
                     Image(systemName: "checkmark.circle")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .font(Font.title.weight(.light))
                         .frame(width: 22, height: 22, alignment: .topLeading)
-                        .onTapGesture {
-                            self.completeTask()
-                        }
+                        .onTapGesture(perform: self.completeTask)
+                        .padding(.top, 8)
                 } else {
                     Image(systemName: "circle")
                         .resizable()
@@ -48,20 +49,20 @@ struct TaskItemView: View {
                         .onTapGesture {
                             self.completeTask()
                         }
+                        .padding(.top, 8)
                 }
                 
-                if task.completed {
-                    Text(task.name)
-                    .strikethrough()
-                    .padding(.top, 1)
-                } else {
-                    TextField("Task name", text: $task.name)
-                    .onChange(of: task.name) { newValue in
-                        throttler.throttle {
-                            let index = self.tasks.firstIndex { $0.id == task.id }
-                            self.tasks[index!].name = newValue
+                ZStack {
+                    TextEditor(text: $task.name)
+                        .onChange(of: task.name) { newValue in
+                            throttler.throttle {
+                                let index = self.tasks.firstIndex { $0.id == task.id }
+                                self.tasks[index!].name = newValue
+                            }
                         }
-                    }
+                    Text(task.name)
+                        .opacity(0)
+                        .padding(.bottom, 15)
                 }
                 
                 Spacer()
@@ -76,7 +77,8 @@ struct TaskItemView: View {
                             .frame(width: 17, height: 17)
                             .onTapGesture {
                                 self.showTaskInfo = true
-                        }
+                            }
+                            .padding(.top, 9)
                     } else {
                         Image(systemName: "clock")
                             .resizable()
@@ -86,7 +88,8 @@ struct TaskItemView: View {
                             .frame(width: 17, height: 17)
                             .onTapGesture {
                                 self.showTaskInfo = true
-                        }
+                            }
+                            .padding(.top, 9)
                     }
                 }
 
@@ -100,7 +103,8 @@ struct TaskItemView: View {
                             .frame(width: 17, height: 17)
                             .onTapGesture {
                                 self.showTaskInfo = true
-                        }
+                            }
+                            .padding(.top, 9)
                     } else {
                         Image(systemName: "bell")
                             .resizable()
@@ -110,7 +114,8 @@ struct TaskItemView: View {
                             .frame(width: 17, height: 17)
                             .onTapGesture {
                                 self.showTaskInfo = true
-                        }
+                            }
+                            .padding(.top, 9)
                     }
                 }
 
@@ -123,11 +128,12 @@ struct TaskItemView: View {
                     .onTapGesture {
                         self.showTaskInfo = true
                     }
+                    .padding(.top, 9)
 
             }
         }
         .sheet(isPresented: $showTaskInfo, content: {
-            TaskItemInfoView(task: self.task)
+            TaskItemDetailsView(task: self.task, onComplete: self.onComplete)
         })
     }
 }

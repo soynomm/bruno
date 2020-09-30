@@ -50,7 +50,7 @@ struct ContentRegularView: View {
 					Text("Tasks")
 				}.tag(0)
 
-				//ScheduleView(db: db)
+				ScheduleView()
 				.tabItem {
 					Image(systemName: "calendar")
 					Text("Schedule")

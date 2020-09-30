@@ -51,10 +51,21 @@ struct TasksView: View
         }
     }
     
+    func onComplete()
+    {
+        let throttler = Throttler(minimumDelay: 1)
+        
+        DispatchQueue.global(qos: .background).async {
+            throttler.throttle {
+                self.tasks = DataProvider().getTasks()
+            }
+        }
+    }
+    
     func unCompletedTasksSection() -> some View
     {
         return ForEach(getTaskListItems(completed: false), id: \.id) { task in
-            TaskItemView(task: TaskObservable(task: task), tasks: self.$tasks)
+            TaskItemView(task: TaskObservable(task: task), tasks: self.$tasks, onComplete: self.onComplete)
         }
         .onDelete(perform: self.deleteUncompleted)
     }
@@ -62,30 +73,47 @@ struct TasksView: View
     func completedTasksSection() -> some View
     {
         return ForEach(getTaskListItems(completed: true), id: \.id) { task in
-            TaskItemView(task: TaskObservable(task: task), tasks: self.$tasks)
+            TaskItemView(task: TaskObservable(task: task), tasks: self.$tasks, onComplete: self.onComplete)
         }
         .onDelete(perform: self.deleteCompleted)
     }
     
     // Create a new task.
-    func addItem()
+    func add()
     {
+        // Get the topmost task
+        let topMostTask = getTaskListItems(completed: false).first
+        
         // If the current tab is "done" then change it back to "todo" before
         if self.currentTab == "done" {
             self.currentTab = "todo"
-        }
-        
-        // But only if the topmost task is not empty!
-        // And also with a 0.25s delay, because we need to wait
-        // for the tab to actually change.
-        //
-        // Note: there's probably a better way to do this.
-        let throttler = Throttler(minimumDelay: 0.25)
-        
-        throttler.throttle {
-            let topMostTask = getTaskListItems(completed: false).first
+    
+            // But only if the topmost task is not empty!
+            // And also with a 0.25s delay, because we need to wait
+            // for the tab to actually change.
+            //
+            // Note: there's probably a better way to do this.
+            let throttler = Throttler(minimumDelay: 0.25)
             
+            throttler.throttle {
+                // If there's a topmost task and it's not empty
+                if topMostTask != nil && !topMostTask!.name.isEmpty {
+                    self.tasks.append(Task(listId: self.currentListId))
+                }
+                
+                // If there is no topmost task
+                if topMostTask == nil {
+                    self.tasks.append(Task(listId: self.currentListId))
+                }
+            }
+        } else {
+            // If there's a topmost task and it's not empty
             if topMostTask != nil && !topMostTask!.name.isEmpty {
+                self.tasks.append(Task(listId: self.currentListId))
+            }
+            
+            // If there is no topmost task
+            if topMostTask == nil {
                 self.tasks.append(Task(listId: self.currentListId))
             }
         }
@@ -122,7 +150,7 @@ struct TasksView: View
     
     func navigationBarTrailingItem() -> some View
     {
-        return Button(action: self.addItem, label: {
+        return Button(action: self.add, label: {
             Image(systemName: "plus")
             .resizable()
             .aspectRatio(contentMode: .fit)

@@ -6,36 +6,43 @@ struct SubTasksView: View {
     var parentId: String
     var throttler = Throttler(minimumDelay: 0.25)
 
-    func addSubTask(){
-        self.tasks.append(SubTask(parentId: self.parentId))
+    func add()
+    {
+        // Find the topmost task
+        let lastTask = self.tasks.filter({ $0.parentId == self.parentId }).last
+        
+        // If the last task exists and is not empty, let's create a new task
+        if lastTask != nil && !lastTask!.name.isEmpty {
+            self.tasks.append(SubTask(parentId: self.parentId))
+        }
+        
+        // If the last task does not exist, let's create a new task
+        if lastTask == nil {
+            self.tasks.append(SubTask(parentId: self.parentId))
+        }
     }
     
-    func delete(at offsets: IndexSet) -> Void {
-        let indexes = Array(offsets)
-        
-        for index in indexes {
-            let task = self.tasks[index]
-            let tasks = self.tasks.filter { $0.id != task.id }
-            DataProvider().updateSubTasks(tasks)
-            self.tasks = tasks
-        }
+    func delete(_ taskId: String)
+    {
+        let updatedTasks = self.tasks.filter { $0.id != taskId }
+        self.tasks = updatedTasks
+        DataProvider().updateSubTasks(updatedTasks)
     }
     
     var body: some View {
-        List {
-            if self.tasks.sorted(by: { $0.dateCreated < $1.dateCreated }).count > 0 {
-                ForEach(self.tasks.sorted(by: { $0.dateCreated < $1.dateCreated })) { task in
-                    SubTaskItemView(task: SubTaskObservable(task: task), tasks: self.$tasks)
-                }
-                .onDelete(perform: self.delete)
+        if self.tasks.sorted(by: { $0.dateCreated < $1.dateCreated }).filter({ $0.parentId == self.parentId }).count > 0 {
+            ForEach(self.tasks.sorted(by: { $0.dateCreated < $1.dateCreated }).filter({ $0.parentId == self.parentId })) { task in
+                SubTaskItemView(task: SubTaskObservable(task: task), tasks: self.$tasks, onDelete: self.delete)
             }
-            
-            Button(action: self.addSubTask, label: { Text("Add task").foregroundColor(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor) })
         }
+            
+        Button(action: self.add, label: { Text("Add task").foregroundColor(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor) })
+            .padding(.top, 5)
+            
         .onAppear {
             throttler.throttle {
                 if self.tasks.isEmpty {
-                    self.tasks = DataProvider().getSubTasks(self.parentId)
+                    self.tasks = DataProvider().getSubTasks()
                 }
             }
         }

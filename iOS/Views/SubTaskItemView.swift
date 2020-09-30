@@ -3,6 +3,8 @@ import SwiftUI
 struct SubTaskItemView: View {
     @ObservedObject var task: SubTaskObservable
     @Binding var tasks: [SubTask]
+    var onDelete: ((_ taskId: String) -> Void)
+    @State private var offset = CGSize.zero
     var throttler = Throttler(minimumDelay: 0.25)
     
     func completeTask() {
@@ -25,31 +27,39 @@ struct SubTaskItemView: View {
     
     var body: some View {
         VStack {
-            HStack(alignment: .center) {
-                if task.completed {
-                    Image(systemName: "checkmark.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .font(Font.title.weight(.light))
-                        .frame(width: 22, height: 22, alignment: .topLeading)
-                        .onTapGesture {
-                            self.completeTask()
-                        }
-                } else {
-                    Image(systemName: "circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .font(Font.title.weight(.light))
-                        .frame(width: 22, height: 22, alignment: .topLeading)
-                        .onTapGesture {
-                            self.completeTask()
-                        }
+            ZStack {
+                HStack {
+                    Spacer()
+                    Text("Delete")
+                        .font(.caption)
+                        .foregroundColor(Color.white)
+                        .padding(.trailing, 15)
                 }
+                .frame(height: 29)
+                .background(Color.red)
+                .cornerRadius(15)
                 
-                if task.completed {
-                    Text(task.name)
-                    .strikethrough()
-                } else {
+                HStack(alignment: .center) {
+                    if task.completed {
+                        Image(systemName: "checkmark.circle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .font(Font.title.weight(.medium))
+                            .frame(width: 18, height: 18, alignment: .topLeading)
+                            .onTapGesture {
+                                self.completeTask()
+                            }
+                    } else {
+                        Image(systemName: "circle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .font(Font.title.weight(.medium))
+                            .frame(width: 18, height: 18, alignment: .topLeading)
+                            .onTapGesture {
+                                self.completeTask()
+                            }
+                    }
+                    
                     TextField("Task name", text: $task.name)
                         .onChange(of: task.name) { newValue in
                             throttler.throttle {
@@ -58,7 +68,31 @@ struct SubTaskItemView: View {
                             }
                         }
                 }
+                .frame(height: 30)
+                .background(Color.white)
+                .cornerRadius(15)
+                .offset(x: offset.width, y: 0)
+                .opacity(2 - Double(abs(offset.width / 75)))
+                .gesture(
+                    DragGesture()
+                        .onChanged { gesture in
+                            if gesture.translation.width.isLessThanOrEqualTo(0) {
+                                self.offset = gesture.translation
+                            }
+                            
+                            print(1 / abs(self.offset.width))
+                        }
+
+                        .onEnded { _ in
+                            if abs(self.offset.width) > 100 {
+                                self.onDelete(self.task.id)
+                            } else {
+                                self.offset = .zero
+                            }
+                        }
+                )
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }
