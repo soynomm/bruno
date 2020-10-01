@@ -33,6 +33,7 @@ struct TaskItemDetailsView: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .short
+        
         return formatter
     }
     
@@ -52,18 +53,13 @@ struct TaskItemDetailsView: View {
 
     func completeTask()
     {
-        if task.completed {
-            task.completed = false
-        } else {
-            task.completed = true
-        }
-        
+        task.completed = !task.completed
         self.onComplete()
     }
     
     var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading) {
+            VStack(alignment: .leading) {
                 HStack(alignment: .top) {
                     // Task checkbox
                     if task.completed {
@@ -71,7 +67,7 @@ struct TaskItemDetailsView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .font(Font.title.weight(.light))
-                            .frame(width: 26, height: 26, alignment: .topLeading)
+                            .frame(width: 27, height: 27, alignment: .topLeading)
                             .onTapGesture(perform: self.completeTask)
                             .padding(.top, 3)
                             .padding(.trailing, 5)
@@ -80,7 +76,7 @@ struct TaskItemDetailsView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .font(Font.title.weight(.light))
-                            .frame(width: 26, height: 26, alignment: .topLeading)
+                            .frame(width: 27, height: 27, alignment: .topLeading)
                             .onTapGesture(perform: self.completeTask)
                             .padding(.top, 3)
                             .padding(.trailing, 5)
@@ -105,7 +101,7 @@ struct TaskItemDetailsView: View {
                 
                 Rectangle()
                     .fill(Color.gray)
-                    .opacity(0.25)
+                    .opacity(0.15)
                     .cornerRadius(5)
                     .frame(maxWidth: .infinity, maxHeight: 2, alignment: .leading)
                 
@@ -117,20 +113,6 @@ struct TaskItemDetailsView: View {
                         .labelsHidden()
                     Spacer()
                     Toggle("", isOn: $task.dueDateReminderSet).labelsHidden()
-                }
-                
-                if task.dueDateReminderSet {
-                    if showDatePicker {
-                        HStack(alignment: .center) {
-                            Spacer()
-                            DatePicker("", selection: $task.dueDate)
-                                .labelsHidden()
-                                .datePickerStyle(WheelDatePickerStyle())
-                            Spacer()
-                            
-                            .animation(Animation.default)
-                        }
-                    }
                 }
 
                 // Tasks

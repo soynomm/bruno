@@ -5,21 +5,11 @@ struct SubTasksView: View {
     @State var tasks: [SubTask] = []
     var parentId: String
     var throttler = Throttler(minimumDelay: 0.25)
+    @State var dataHasLoaded = false
 
     func add()
     {
-        // Find the topmost task
-        let lastTask = self.tasks.filter({ $0.parentId == self.parentId }).last
-        
-        // If the last task exists and is not empty, let's create a new task
-        if lastTask != nil && !lastTask!.name.isEmpty {
-            self.tasks.append(SubTask(parentId: self.parentId))
-        }
-        
-        // If the last task does not exist, let's create a new task
-        if lastTask == nil {
-            self.tasks.append(SubTask(parentId: self.parentId))
-        }
+        self.tasks.append(SubTask(parentId: self.parentId))
     }
     
     func delete(_ taskId: String)
@@ -30,19 +20,26 @@ struct SubTasksView: View {
     }
     
     var body: some View {
-        if self.tasks.sorted(by: { $0.dateCreated < $1.dateCreated }).filter({ $0.parentId == self.parentId }).count > 0 {
+        if self.dataHasLoaded {
             ForEach(self.tasks.sorted(by: { $0.dateCreated < $1.dateCreated }).filter({ $0.parentId == self.parentId })) { task in
-                SubTaskItemView(task: SubTaskObservable(task: task), tasks: self.$tasks, onDelete: self.delete)
+                SubTaskItemView(task: SubTaskObservable(task: task), onDelete: self.delete)
             }
+        } else {
+            SubTaskItemPhantomView()
+            SubTaskItemPhantomView()
+            SubTaskItemPhantomView()
         }
             
-        Button(action: self.add, label: { Text("Add task").foregroundColor(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor) })
+        Button(action: self.add, label: {
+            Text("Add task")
+        })
             .padding(.top, 5)
             
         .onAppear {
             throttler.throttle {
                 if self.tasks.isEmpty {
                     self.tasks = DataProvider().getSubTasks()
+                    self.dataHasLoaded = true
                 }
             }
         }

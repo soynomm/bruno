@@ -16,7 +16,7 @@ struct ContentWelcomeView: View {
 			Image("Logo")
 			.resizable()
 			.aspectRatio(contentMode: .fit)
-			.frame(width: 100, height: 100)
+			.frame(width: 50, height: 50)
 			
 			if !onlyLogo {
 				Text("Hi! I'm Bruno, your best friend when it comes to getting things done.")
@@ -27,7 +27,6 @@ struct ContentWelcomeView: View {
 					self.disableWelcomeScreen()
 				}, label: {
 					Text("Let's do it!")
-					.foregroundColor(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor)
 				})
 				.padding(.top, 20)
 			}
@@ -56,7 +55,6 @@ struct ContentRegularView: View {
 					Text("Schedule")
 				}.tag(1)
 			}
-			.accentColor(colorScheme == .dark ? AppConfiguration().primaryColorDark : AppConfiguration().primaryColor)
 		} else {
 			TasksView()
 		}

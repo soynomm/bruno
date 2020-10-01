@@ -66,32 +66,6 @@ struct TaskItemView: View {
                 }
                 
                 Spacer()
-                
-                if task.dueDateSet && !task.completed {
-                    if task.dueDate < Date() {
-                        Image(systemName: "clock")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(Color.red)
-                            .font(Font.title.weight(.light))
-                            .frame(width: 17, height: 17)
-                            .onTapGesture {
-                                self.showTaskInfo = true
-                            }
-                            .padding(.top, 9)
-                    } else {
-                        Image(systemName: "clock")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(Color.blue)
-                            .font(Font.title.weight(.light))
-                            .frame(width: 17, height: 17)
-                            .onTapGesture {
-                                self.showTaskInfo = true
-                            }
-                            .padding(.top, 9)
-                    }
-                }
 
                 if task.dueDateReminderSet && !task.completed {
                     if task.dueDate < Date() {

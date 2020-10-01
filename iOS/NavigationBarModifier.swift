@@ -3,7 +3,7 @@ import SwiftUI
 struct NavigationBarModifier: ViewModifier {
     var backgroundColor: UIColor?
     
-    init(backgroundColor: UIColor?, tintColor: UIColor, textColor: UIColor) {
+    init(backgroundColor: UIColor?, textColor: UIColor) {
         self.backgroundColor = backgroundColor
         let coloredAppearance = UINavigationBarAppearance()
         coloredAppearance.configureWithTransparentBackground()
@@ -14,7 +14,7 @@ struct NavigationBarModifier: ViewModifier {
         UINavigationBar.appearance().standardAppearance = coloredAppearance
         UINavigationBar.appearance().compactAppearance = coloredAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
-        UINavigationBar.appearance().tintColor = tintColor
+        //UINavigationBar.appearance().tintColor = tintColor
     }
     
     func body(content: Content) -> some View {
