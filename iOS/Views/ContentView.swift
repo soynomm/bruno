@@ -41,22 +41,18 @@ struct ContentRegularView: View {
 	@State var selectedView = 0
 
 	var body: some View {
-		if AppFeatures().schedule {
-			TabView {
-				TasksView()
-				.tabItem {
-					Image(systemName: "checkmark.circle")
-					Text("Tasks")
-				}.tag(0)
-
-				ScheduleView()
-				.tabItem {
-					Image(systemName: "calendar")
-					Text("Schedule")
-				}.tag(1)
-			}
-		} else {
+		TabView {
 			TasksView()
+			.tabItem {
+				Image(systemName: "checkmark.circle")
+				Text("Tasks")
+			}.tag(0)
+
+			AccountView()
+			.tabItem {
+				Image(systemName: "calendar")
+				Text("Account")
+			}.tag(1)
 		}
 	}
 }
